@@ -1,0 +1,34 @@
+{
+  "name": "pmpl-project",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.4.1",
+    "next": "15.2.1",
+    "postcss": "^8.5.3",
+    "prisma": "^6.4.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@eslint/js": "^9.21.0",
+    "@tailwindcss/postcss": "^4.0.9",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9.21.0",
+    "eslint-config-next": "^15.2.1",
+    "eslint-plugin-react": "^7.37.4",
+    "globals": "^16.0.0",
+    "tailwindcss": "^4.0.9",
+    "typescript": "^5",
+    "typescript-eslint": "^8.26.0"
+  }
+}
