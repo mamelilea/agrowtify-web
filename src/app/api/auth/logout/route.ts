@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { removeSession } from '../../../../lib/auth';
-export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   try {
@@ -33,3 +32,7 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const config = {
+  runtime: 'nodejs'
+};

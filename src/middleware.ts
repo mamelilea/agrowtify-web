@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getUserFromToken } from './lib/auth';
 
+
 export async function middleware(request: NextRequest) {
   const protectedPaths = ['/weather', '/about'];
   
@@ -32,4 +33,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: ['/weather/:path*'],
+  runtime: 'nodejs'
 };
