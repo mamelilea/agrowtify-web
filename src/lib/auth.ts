@@ -52,7 +52,7 @@ export async function getUserFromToken(token: string): Promise<UserSession | nul
       email: session.user.email,
       name: session.user.name,
     };
-  } catch (_) {
+  } catch {
     return null;
   }
 }
@@ -77,7 +77,7 @@ export async function removeSession(token: string): Promise<boolean> {
       where: { sessionToken: token },
     });
     return true;
-  } catch (_) {
+  } catch {
     return false;
   }
 }
