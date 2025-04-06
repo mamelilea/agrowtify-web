@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useAuth } from '../../components/auth/AuthProvider';
 
 export default function WeatherPage() {

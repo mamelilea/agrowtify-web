@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from './AuthProvider';
+import React from 'react';
 
 const registerSchema = z.object({
   name: z.string().min(1, 'Nama wajib diisi'),

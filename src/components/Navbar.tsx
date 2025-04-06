@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from './auth/AuthProvider';
+import React from 'react';
 
 export default function Navbar() {
   const { user, loading, logout } = useAuth();

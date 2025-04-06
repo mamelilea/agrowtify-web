@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from './AuthProvider';
+import React from 'react';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Email tidak valid' }),
