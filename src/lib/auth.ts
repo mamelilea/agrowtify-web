@@ -39,6 +39,7 @@ export async function createSession(userId: string): Promise<string> {
 export async function getUserFromToken(token: string): Promise<UserSession | null> {
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    
 
     const session = await prisma.session.findFirst({
       where: { sessionToken: token },
@@ -54,7 +55,7 @@ export async function getUserFromToken(token: string): Promise<UserSession | nul
       email: session.user.email,
       name: session.user.name,
     };
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 }

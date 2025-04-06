@@ -11,7 +11,7 @@ export default function WeatherPage() {
       <h1 className="text-3xl font-bold text-center mb-6">Weather Page</h1>
       <div className="bg-white p-6 rounded shadow-md">
         <p className="mb-4">
-          This page is only accessible to authenticated users. If you can see this, you're logged in!
+          {"This page is only accessible to authenticated users. If you can see this, you're logged in!"}
         </p>
         
         <div className="mt-6 p-4 bg-gray-100 rounded-md">
