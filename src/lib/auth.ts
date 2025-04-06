@@ -22,14 +22,14 @@ export async function comparePasswords(plainPassword: string, hashedPassword: st
 export async function createSession(userId: string): Promise<string> {
   const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
   
-  const expires = new Date();
-  expires.setDate(expires.getDate() + 7);
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 7);
   
   await prisma.session.create({
     data: {
       userId,
-      expires,
-      sessionToken: token,
+      expiresAt,
+      token,
     },
   });
   
@@ -39,11 +39,11 @@ export async function createSession(userId: string): Promise<string> {
 export async function getUserFromToken(token: string): Promise<UserSession | null> {
   try {
     const session = await prisma.session.findFirst({
-      where: { sessionToken: token },
+      where: { token: token },
       include: { user: true },
     });
     
-    if (!session || session.expires < new Date()) {
+    if (!session || session.expiresAt < new Date()) {
       return null;
     }
     
@@ -74,7 +74,7 @@ export async function getSessionFromRequest(req: NextRequest): Promise<UserSessi
 export async function removeSession(token: string): Promise<boolean> {
   try {
     await prisma.session.deleteMany({
-      where: { sessionToken: token },
+      where: { token: token },
     });
     return true;
   } catch {
