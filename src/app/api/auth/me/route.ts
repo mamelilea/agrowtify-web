@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '../../../../lib/auth';
+export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   try {
@@ -21,7 +22,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
-export const config = {
-  runtime: 'nodejs'
-};

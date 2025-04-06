@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../lib/db';
 import { hashPassword } from '../../../../lib/auth';
+export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   try {
@@ -52,7 +53,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-export const config = {
-  runtime: 'nodejs'
-};
