@@ -1,0 +1,9 @@
+{
+    "extends": ["next/core-web-vitals"],
+    "plugins": ["react"],
+    "settings": {
+      "react": {
+        "version": "19.0.0"
+      }
+    }
+  }

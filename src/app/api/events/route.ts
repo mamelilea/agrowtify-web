@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '../../../lib/db';
 import { getSessionFromRequest } from '../../../lib/auth-node';
+import type { Prisma } from '@prisma/client';
 export const runtime = 'nodejs';
 
 // GET - /api/events
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
         const limit = parseInt(searchParams.get('limit') || '10');
         const skip = (page - 1) * limit;
 
-        const where: any = { isPublished: true };
+        const where: Prisma.EventWhereInput = { isPublished: true };
 
         if (category) {
             where.categoryId = category;
