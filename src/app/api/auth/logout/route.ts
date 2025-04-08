@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { removeSession } from '../../../../lib/auth';
+import { removeSession } from '../../../../lib/auth-node';
 export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
