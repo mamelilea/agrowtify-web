@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useAuth } from './auth/AuthProvider';
+import { useAuth } from '../auth/AuthProvider';
 import React from 'react';
 
 export default function Navbar() {
@@ -13,22 +13,21 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="font-bold text-xl">
-              MyApp
+              Agrowtify
             </Link>
             <div className="ml-10 flex items-baseline space-x-4">
               <Link href="/" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
                 Home
               </Link>
-              {user && (
-                <Link href="/about" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
-                  About
-                </Link>
-              )}
-              {user && (
-                <Link href="/weather" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
-                  Weather
-                </Link>
-              )}
+              <Link href="/agrocare" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
+                Agrocare
+              </Link>
+              <Link href="/agroevent" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
+                Agroevent
+              </Link>
+              <Link href="/agroguide" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
+                Agroguide
+              </Link>
             </div>
           </div>
           <div className="flex items-center">
