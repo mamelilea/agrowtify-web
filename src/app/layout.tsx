@@ -8,8 +8,8 @@ import { AuthProvider } from '../components/auth/AuthProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Next.js Auth App',
-  description: 'A Next.js app with authentication',
+  title: 'Agrowtify',
+  description: 'website petani',
 };
 
 export default function RootLayout({
