@@ -18,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import Image from 'next/image';
 
 export default function Navbar() {
   const { user, loading, logout } = useAuth();
@@ -33,10 +34,10 @@ export default function Navbar() {
 
   return (
     <div className="border-b bg-background">
-      <div className="flex h-16 items-center px-4 max-w-7xl mx-auto">
+      <div className="flex h-20 items-center px-4 max-w-7xl mx-auto">
         <div className="mr-4 flex">
-          <Link href="/" className="font-bold text-xl">
-            Agrowtify
+          <Link href="/" className="font-bold text-xl flex">
+            <Image src="/assets/logo/LogoNavbar.png" alt='Logo Navbar' width={220} height={200}/>
           </Link>
         </div>
         <NavigationMenu className="mx-6 flex-1">
