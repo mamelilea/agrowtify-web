@@ -1,9 +1,12 @@
 {
-    "extends": ["next", "next/core-web-vitals", "eslint:recommended"],
-    "plugins": ["react"],
-    "settings": {
-      "react": {
-        "version": "detect"
-      }
+  "extends": ["next", "next/core-web-vitals"],
+  "plugins": ["react"],
+  "settings": {
+    "react": {
+      "version": "detect"
     }
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off"
   }
+}
