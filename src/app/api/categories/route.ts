@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '../../../lib/db';
-import { getSessionFromRequest } from '../../../lib/auth-node';
+import prisma from '@/lib/db';
+import { getSessionFromRequest } from '@/lib/auth-node';
 export const runtime = 'nodejs';
 
 // GET - /api/categories

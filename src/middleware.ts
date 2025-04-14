@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getUserFromToken } from './lib/auth-node';
+import { getUserFromToken } from '@/lib/auth-node';
 
 
 export async function middleware(request: NextRequest) {

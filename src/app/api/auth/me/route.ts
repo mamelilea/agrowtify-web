@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSessionFromRequest } from '../../../../lib/auth-node';
+import { getSessionFromRequest } from '@/lib/auth-node';
 export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {

@@ -4,8 +4,8 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import RegisterForm from '../../components/auth/RegisterForm';
-import { useAuth } from '../../components/auth/AuthProvider';
+import RegisterForm from '@/components/auth/RegisterForm';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 export default function RegisterPage() {
   const { user, loading } = useAuth();

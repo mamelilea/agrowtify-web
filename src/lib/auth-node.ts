@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import prisma from './db';
+import prisma from '@/lib/db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-not-for-production';
 
