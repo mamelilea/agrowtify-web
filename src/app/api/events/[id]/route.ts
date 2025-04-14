@@ -4,7 +4,6 @@ import { getSessionFromRequest } from '../../../../lib/auth-node';
 
 export const runtime = 'nodejs';
 
-// Tambahkan deklarasi tipe yang lebih spesifik
 type RouteParams = {
   params: { id: string }
 }

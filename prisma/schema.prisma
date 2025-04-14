@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  password      String
-  role          UserRole  @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  events        Event[]
+  id         String             @id @default(cuid())
+  name       String?
+  email      String             @unique
+  password   String
+  role       UserRole           @default(USER)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  sessions   Session[]
+  events     Event[]
+  agroguides AgroguideContent[]
 }
 
 enum UserRole {
@@ -25,46 +26,68 @@ enum UserRole {
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  userId       String
-  token        String   @unique
-  expiresAt    DateTime
-  createdAt    DateTime @default(now())
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Event {
-  id            String    @id @default(cuid())
-  title         String
-  description   String    @db.Text
-  location      String?
-  eventType     EventType
-  startDate     DateTime
-  endDate       DateTime
-  imageUrl      String?
-  organizer     String
-  contactInfo   String?
-  website       String?
-  category      Category  @relation(fields: [categoryId], references: [id])
-  categoryId    String
-  isPublished   Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  createdBy     User      @relation(fields: [userId], references: [id])
-  userId        String
+  id          String    @id @default(cuid())
+  title       String
+  description String    @db.Text
+  location    String?
+  eventType   EventType
+  startDate   DateTime
+  endDate     DateTime
+  imageUrl    String?
+  organizer   String
+  contactInfo String?
+  website     String?
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  isPublished Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdBy   User      @relation(fields: [userId], references: [id])
+  userId      String
 }
 
 model Category {
-  id          String    @id @default(cuid())
-  name        String    @unique
+  id          String             @id @default(cuid())
+  name        String             @unique
   description String?
   events      Event[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  agroguides  AgroguideContent[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 }
 
 enum EventType {
   ONLINE
   OFFLINE
   HYBRID
+}
+
+enum ContentType {
+  ARTICLE
+  VIDEO
+}
+
+model AgroguideContent {
+  id          String      @id @default(cuid())
+  title       String
+  description String      @db.Text
+  contentType ContentType
+  url         String 
+  thumbnail   String? 
+  categoryId  String
+  category    Category    @relation(fields: [categoryId], references: [id])
+  isPublished Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  createdBy   User        @relation(fields: [userId], references: [id])
+  userId      String
 }

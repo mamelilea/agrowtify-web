@@ -1,21 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '../../../lib/db';
 import { getSessionFromRequest } from '../../../lib/auth-node';
-import type { EventType, Prisma } from '@prisma/client';
+import { ContentType, Prisma } from '@prisma/client';
 export const runtime = 'nodejs';
 
-// GET - /api/events
+// GET - /api/agroguide
 export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
         const category = searchParams.get('category');
         const search = searchParams.get('search');
-        const type = searchParams.get('type');
+        const type = searchParams.get('type'); 
         const page = parseInt(searchParams.get('page') || '1');
         const limit = parseInt(searchParams.get('limit') || '10');
         const skip = (page - 1) * limit;
+        
 
-        const where: Prisma.EventWhereInput = { isPublished: true };
+        const where: Prisma.AgroguideContentWhereInput = { isPublished: true };
 
         if (category) {
             where.categoryId = category;
@@ -25,32 +26,31 @@ export async function GET(request: NextRequest) {
             where.OR = [
                 { title: { contains: search, mode: 'insensitive' } },
                 { description: { contains: search, mode: 'insensitive' } },
-                { organizer: { contains: search, mode: 'insensitive' } },
             ];
         }
 
         if (type) {
-            if (type === 'ONLINE' || type === 'OFFLINE' || type === 'HYBRID') {
-                where.eventType = type as EventType;
+            if (type === 'ARTICLE' || type === 'VIDEO') {
+                where.contentType = type as ContentType;
               }
         }
 
-        const events = await prisma.event.findMany({
+        const content = await prisma.agroguideContent.findMany({
             where,
             include: {
                 category: true,
             },
             orderBy: {
-                startDate: 'asc',
+                createdAt: 'desc',
             },
             skip,
             take: limit,
         });
 
-        const total = await prisma.event.count({ where });
+        const total = await prisma.agroguideContent.count({ where });
 
         return NextResponse.json({
-            events,
+            content,
             pagination: {
                 total,
                 page,
@@ -59,29 +59,40 @@ export async function GET(request: NextRequest) {
             }
         });
     } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error('Error fetching agroguide content:', error);
         return NextResponse.json(
-            { error: 'Failed to fetch events' },
+            { error: 'Failed to fetch agroguide content' },
             { status: 500 }
         );
     }
 }
 
-// POST - /api/events
+// POST - /api/agroguide
 export async function POST(request: NextRequest) {
     try {
-        const user = await getSessionFromRequest(request);
+        const session = await getSessionFromRequest(request);
 
-        if (!user) {
+        if (!session) {
             return NextResponse.json(
                 { error: 'Unauthorized' },
                 { status: 401 }
             );
         }
 
+        const user = await prisma.user.findUnique({
+            where: { id: session.id }
+        });
+
+        if (!user || user.role !== 'ADMIN') {
+            return NextResponse.json(
+                { error: 'Unauthorized. Admin access required.' },
+                { status: 403 }
+            );
+        }
+
         const data = await request.json();
 
-        const requiredFields = ['title', 'description', 'eventType', 'startDate', 'endDate', 'organizer', 'categoryId'];
+        const requiredFields = ['title', 'description', 'contentType', 'url', 'categoryId'];
         for (const field of requiredFields) {
             if (!data[field]) {
                 return NextResponse.json(
@@ -91,12 +102,10 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        const event = await prisma.event.create({
+        const content = await prisma.agroguideContent.create({
             data: {
                 ...data,
-                startDate: new Date(data.startDate),
-                endDate: new Date(data.endDate),
-                userId: user.id,
+                userId: session.id,
             },
             include: {
                 category: true,
@@ -104,13 +113,13 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json(
-            { message: 'Event created successfully', event },
+            { message: 'Agroguide content created successfully', content },
             { status: 201 }
         );
     } catch (error) {
-        console.error('Error creating event:', error);
+        console.error('Error creating agroguide content:', error);
         return NextResponse.json(
-            { error: 'Failed to create event' },
+            { error: 'Failed to create agroguide content' },
             { status: 500 }
         );
     }
