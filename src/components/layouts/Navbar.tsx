@@ -2,63 +2,112 @@
 
 import Link from 'next/link';
 import { useAuth } from '../auth/AuthProvider';
+import { Button } from '@/components/ui/button';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu';
 import React from 'react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export default function Navbar() {
   const { user, loading, logout } = useAuth();
 
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
+
   return (
-    <nav className="bg-gray-800 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="font-bold text-xl">
-              Agrowtify
-            </Link>
-            <div className="ml-10 flex items-baseline space-x-4">
-              <Link href="/" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
-                Home
+    <div className="border-b bg-background">
+      <div className="flex h-16 items-center px-4 max-w-7xl mx-auto">
+        <div className="mr-4 flex">
+          <Link href="/" className="font-bold text-xl">
+            Agrowtify
+          </Link>
+        </div>
+        <NavigationMenu className="mx-6 flex-1">
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <Link href="/" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Home
+                </NavigationMenuLink>
               </Link>
-              <Link href="/agrocare" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
-                Agrocare
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/agrocare" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Agrocare
+                </NavigationMenuLink>
               </Link>
-              <Link href="/agroevent" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
-                Agroevent
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/agroevent" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Agroevent
+                </NavigationMenuLink>
               </Link>
-              <Link href="/agroguide" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
-                Agroguide
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/agroguide" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Agroguide
+                </NavigationMenuLink>
               </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+        <div className="ml-auto flex items-center space-x-4">
+          {loading ? (
+            <div className="text-sm px-3 py-2">Loading...</div>
+          ) : user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm hidden md:inline">Hello, {user.name || user.email}</span>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className="h-8 w-8 cursor-pointer">
+                    <AvatarFallback>{user.name ? getInitials(user.name) : 'U'}</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout} className="text-red-500">
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-          </div>
-          <div className="flex items-center">
-            {loading ? (
-              <div className="text-sm px-3 py-2">Loading...</div>
-            ) : user ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm">Hello, {user.name || user.email}</span>
-                <button
-                  onClick={logout}
-                  className="px-3 py-2 rounded-md text-sm font-medium bg-red-600 hover:bg-red-700"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Link href="/login" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
-                  Login
-                </Link>
-                <Link
-                  href="/register"
-                  className="px-3 py-2 rounded-md text-sm font-medium bg-blue-600 hover:bg-blue-700"
-                >
-                  Register
-                </Link>
-              </div>
-            )}
-          </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Link href="/login" legacyBehavior passHref>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/login">Login</Link>
+                </Button>
+              </Link>
+              <Button size="sm" asChild>
+                <Link href="/register">Register</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </div>
-    </nav>
+    </div>
   );
 }
