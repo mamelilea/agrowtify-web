@@ -3,6 +3,18 @@ import prisma from '@/lib/db';
 import { getSessionFromRequest } from '@/lib/auth-node';
 export const runtime = 'nodejs';
 
+type WeatherData = {
+    current: {
+      temp: number;
+      humidity: number;
+      weather: {
+        main: string;
+      }[];
+    };
+    timezone?: string;
+  };
+  
+
 async function fetchWeatherData(lat: number, lon: number) {
     try {
         const apiKey = process.env.OPENWEATHER_API_KEY;
@@ -311,7 +323,7 @@ function getMockWeatherData(lat: number, lon: number) {
     };
 }
 
-async function generatePlantCareRecommendations(plantName: string, weatherData: any) {
+async function generatePlantCareRecommendations(plantName: string, weatherData: WeatherData) {
     try {
         const currentTemp = weatherData.current.temp;
         const humidity = weatherData.current.humidity;
@@ -433,6 +445,7 @@ export async function GET(request: NextRequest) {
             }
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const forecast = await prisma.weatherForecast.create({
             data: {
                 userId: session.id,
