@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default function Agrocare() {
+export default function WeatherPage() {
     return (
         <div>
-            ini page agro care
+            ini page weather nanti
         </div>
     );
 }

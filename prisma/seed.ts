@@ -4,10 +4,19 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('password123', 10);
+  console.log('🧹 Clearing old data...');
+  await prisma.agroguideContent.deleteMany();
+  await prisma.event.deleteMany();
+  await prisma.category.deleteMany();
+  await prisma.plant.deleteMany();
+  await prisma.user.deleteMany();
 
-  const user = await prisma.user.create({
-    data: {
+  console.log('🔐 Creating admin user...');
+  const hashedPassword = await bcrypt.hash('password123', 10);
+  const user = await prisma.user.upsert({
+    where: { email: 'admin@dummy.com' },
+    update: {},
+    create: {
       name: 'Admin Dummy',
       email: 'admin@dummy.com',
       password: hashedPassword,
@@ -15,34 +24,45 @@ async function main() {
     },
   });
 
-  const workshopCategory = await prisma.category.create({
-    data: {
-      name: 'Workshop',
-      description: 'Pelatihan dan workshop komunitas',
-    },
-  });
+  console.log('📚 Creating categories...');
+  const categories = await Promise.all([
+    prisma.category.upsert({
+      where: { name: 'Workshop' },
+      update: {},
+      create: {
+        name: 'Workshop',
+        description: 'Pelatihan dan workshop komunitas',
+      },
+    }),
+    prisma.category.upsert({
+      where: { name: 'Rice Farming' },
+      update: {},
+      create: {
+        name: 'Rice Farming',
+        description: 'Techniques and knowledge about rice cultivation.',
+      },
+    }),
+    prisma.category.upsert({
+      where: { name: 'Vegetable Gardening' },
+      update: {},
+      create: {
+        name: 'Vegetable Gardening',
+        description: 'Tips for growing vegetables in your garden.',
+      },
+    }),
+    prisma.category.upsert({
+      where: { name: 'Farm Technology' },
+      update: {},
+      create: {
+        name: 'Farm Technology',
+        description: 'Modern technology applications in agriculture.',
+      },
+    }),
+  ]);
 
-  const riceFarmingCategory = await prisma.category.create({
-    data: {
-      name: 'Rice Farming',
-      description: 'Techniques and knowledge about rice cultivation.',
-    },
-  });
+  const [workshopCategory, riceFarmingCategory, vegetableGardeningCategory, farmTechnologyCategory] = categories;
 
-  const vegetableGardeningCategory = await prisma.category.create({
-    data: {
-      name: 'Vegetable Gardening',
-      description: 'Tips for growing vegetables in your garden.',
-    },
-  });
-
-  const farmTechnologyCategory = await prisma.category.create({
-    data: {
-      name: 'Farm Technology',
-      description: 'Modern technology applications in agriculture.',
-    },
-  });
-
+  console.log('📅 Creating sample event...');
   await prisma.event.create({
     data: {
       title: 'Pelatihan Budidaya Sayur',
@@ -61,83 +81,120 @@ async function main() {
     },
   });
 
+  console.log('🌱 Creating plant entries...');
+  const plants = [
+    {
+      name: 'Rice',
+      description: 'Rice is the seed of the grass species Oryza sativa or less commonly Oryza glaberrima...',
+      careGuide: 'Rice plants need consistent water, with fields typically flooded...',
+    },
+    {
+      name: 'Coffee',
+      description: 'Coffee is a brewed drink prepared from roasted coffee beans...',
+      careGuide: 'Coffee plants prefer partial shade, consistent moisture...',
+    },
+    {
+      name: 'Corn (Maize)',
+      description: 'Corn is a cereal grain first domesticated by indigenous peoples...',
+      careGuide: 'Corn requires full sun, consistent moisture...',
+    },
+    {
+      name: 'Soybean',
+      description: 'Soybeans are legumes native to East Asia...',
+      careGuide: 'Soybeans need full sun, moderate water...',
+    },
+    {
+      name: 'Cassava',
+      description: 'Cassava is a root vegetable widely consumed in developing countries...',
+      careGuide: 'Cassava is drought-tolerant but performs best with regular watering...',
+    },
+    {
+      name: 'Chili Pepper',
+      description: 'Chili peppers are varieties of the berry-fruit of plants from the genus Capsicum...',
+      careGuide: 'Chili peppers require full sun, moderate water...',
+    },
+  ];
+
+  for (const plant of plants) {
+    await prisma.plant.create({ data: plant });
+  }
+
+  console.log('📖 Creating Agroguide content...');
   const agroguideEntries = [
     {
       title: 'Modern Rice Farming Techniques',
-      description: 'Learn about the latest techniques in rice farming that can improve yield and reduce resource usage. This comprehensive guide covers water management, pest control, and harvesting methods.',
+      description: 'Learn about the latest techniques in rice farming...',
       contentType: ContentType.ARTICLE,
       url: 'https://example.com/rice-farming-techniques',
       thumbnail: 'https://via.placeholder.com/300x200.png?text=Rice+Farming',
       categoryId: riceFarmingCategory.id,
       isPublished: true,
-      userId: user.id
+      userId: user.id,
     },
     {
       title: 'Video Guide: Rice Planting Season',
-      description: 'A complete video guide showing the best practices for rice planting during the main season. Watch expert farmers demonstrate proper techniques.',
+      description: 'A complete video guide showing the best practices for rice planting...',
       contentType: ContentType.VIDEO,
       url: 'https://example.com/videos/rice-planting',
       thumbnail: 'https://via.placeholder.com/300x200.png?text=Rice+Planting+Video',
       categoryId: riceFarmingCategory.id,
       isPublished: true,
-      userId: user.id
+      userId: user.id,
     },
     {
       title: 'Organic Vegetable Growing for Beginners',
-      description: 'Start your organic vegetable garden with these beginner-friendly tips. This article covers soil preparation, organic pest control, and seasonal planting guides.',
+      description: 'Start your organic vegetable garden with these beginner-friendly tips...',
       contentType: ContentType.ARTICLE,
       url: 'https://example.com/organic-vegetables',
       thumbnail: 'https://via.placeholder.com/300x200.png?text=Organic+Veggies',
       categoryId: vegetableGardeningCategory.id,
       isPublished: true,
-      userId: user.id
+      userId: user.id,
     },
     {
       title: 'Urban Farming Solutions',
-      description: 'Explore innovative ways to grow vegetables in limited urban spaces. Learn about vertical gardening, container gardening, and hydroponic systems.',
+      description: 'Explore innovative ways to grow vegetables in limited urban spaces...',
       contentType: ContentType.ARTICLE,
       url: 'https://example.com/urban-farming',
       thumbnail: 'https://via.placeholder.com/300x200.png?text=Urban+Farming',
       categoryId: vegetableGardeningCategory.id,
       isPublished: true,
-      userId: user.id
+      userId: user.id,
     },
     {
       title: 'Video Tutorial: Setting Up a Drip Irrigation System',
-      description: 'A step-by-step video guide on installing a drip irrigation system for your garden to save water and improve plant health.',
+      description: 'A step-by-step video guide on installing a drip irrigation system...',
       contentType: ContentType.VIDEO,
       url: 'https://example.com/videos/drip-irrigation',
       thumbnail: 'https://via.placeholder.com/300x200.png?text=Drip+Irrigation',
       categoryId: farmTechnologyCategory.id,
       isPublished: true,
-      userId: user.id
+      userId: user.id,
     },
     {
       title: 'Smart Farming Technology in 2025',
-      description: 'An overview of the latest smart farming technologies including IoT sensors, drones, and AI-based crop monitoring systems.',
+      description: 'An overview of the latest smart farming technologies...',
       contentType: ContentType.ARTICLE,
       url: 'https://example.com/smart-farming-2025',
       thumbnail: 'https://via.placeholder.com/300x200.png?text=Smart+Farming',
       categoryId: farmTechnologyCategory.id,
       isPublished: true,
-      userId: user.id
+      userId: user.id,
     },
     {
       title: 'Unpublished Draft: Sustainable Farming Methods',
-      description: 'This is a draft article about sustainable farming methods that has not been published yet.',
+      description: 'This is a draft article about sustainable farming methods...',
       contentType: ContentType.ARTICLE,
       url: 'https://example.com/sustainable-farming-draft',
       thumbnail: 'https://via.placeholder.com/300x200.png?text=Sustainable+Farming',
       categoryId: farmTechnologyCategory.id,
       isPublished: false,
-      userId: user.id
-    }
+      userId: user.id,
+    },
   ];
 
   for (const entry of agroguideEntries) {
-    await prisma.agroguideContent.create({
-      data: entry
-    });
+    await prisma.agroguideContent.create({ data: entry });
   }
 
   console.log('✅ Dummy data created successfully!');
