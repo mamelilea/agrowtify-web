@@ -197,6 +197,64 @@ async function main() {
     await prisma.agroguideContent.create({ data: entry });
   }
 
+  console.log('📝 Creating journal questions...');
+  const journalQuestions = [
+    {
+      question: 'How are your plants doing today?',
+      description: 'Describe the general condition of your plants',
+      orderIndex: 1,
+      isRequired: true,
+      type: 'TEXTAREA'
+    },
+    {
+      question: 'Did you water your plants today?',
+      description: 'Please select yes or no',
+      orderIndex: 2,
+      isRequired: true,
+      options: ['Yes', 'No'],
+      type: 'SELECT'
+    },
+    {
+      question: 'How much water did you use? (in liters)',
+      description: 'Enter approximate amount',
+      orderIndex: 3,
+      isRequired: false,
+      type: 'NUMBER'
+    },
+    {
+      question: 'Have you noticed any pests or diseases?',
+      description: 'Describe any issues you have observed',
+      orderIndex: 4,
+      isRequired: false,
+      type: 'TEXTAREA'
+    },
+    {
+      question: 'What activities did you perform today?',
+      description: 'Select all that apply',
+      orderIndex: 5,
+      isRequired: false,
+      options: ['Watering', 'Fertilizing', 'Weeding', 'Harvesting', 'Planting', 'Pruning', 'Pest control'],
+      type: 'MULTISELECT'
+    },
+    {
+      question: 'When did you last fertilize your plants?',
+      description: 'Enter the date',
+      orderIndex: 6,
+      isRequired: false,
+      type: 'DATE'
+    }
+  ];
+
+  for (const questionData of journalQuestions) {
+    await prisma.journalQuestion.upsert({
+      where: {
+        id: `question_${questionData.orderIndex}`
+      },
+      update: {},
+      create: questionData
+    });
+  }
+
   console.log('✅ Dummy data created successfully!');
 }
 
