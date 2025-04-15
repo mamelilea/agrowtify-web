@@ -17,6 +17,7 @@ model User {
   updatedAt  DateTime           @updatedAt
   sessions   Session[]
   events     Event[]
+  journals   Journal[]
   agroguides AgroguideContent[]
   weatherForecasts WeatherForecast[]
 }
@@ -98,6 +99,7 @@ model Plant {
   name        String   @unique
   description String   @db.Text
   careGuide   String   @db.Text
+  journals    Journal[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   weatherForecasts WeatherForecast[] 
@@ -114,3 +116,67 @@ model WeatherForecast {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Journal {
+  id          String       @id @default(cuid())
+  title       String?
+  date        DateTime     @default(now())
+  answers     Answer[]
+  media       Media[]
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plantId     String?
+  plant       Plant?       @relation(fields: [plantId], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model JournalQuestion {
+  id          String       @id @default(cuid())
+  question    String
+  description String?
+  orderIndex  Int
+  isRequired  Boolean      @default(false)
+  options     String[]     @default([])
+  type        QuestionType @default(TEXT)
+  answers     Answer[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Answer {
+  id          String           @id @default(cuid())
+  text        String
+  journalId   String
+  journal     Journal          @relation(fields: [journalId], references: [id], onDelete: Cascade)
+  questionId  String
+  question    JournalQuestion  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model Media {
+  id          String     @id @default(cuid())
+  url         String
+  fileKey     String     @unique // For cloud storage reference
+  type        MediaType
+  journalId   String
+  journal     Journal    @relation(fields: [journalId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum QuestionType {
+  TEXT
+  TEXTAREA
+  SELECT
+  MULTISELECT
+  DATE
+  NUMBER
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
