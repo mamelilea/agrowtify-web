@@ -1,58 +1,63 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useAuth } from '@/components/auth/AuthProvider';
-import { Button } from '@/components/ui/button';
+import Link from "next/link";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
-import React from 'react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+} from "@/components/ui/navigation-menu";
+import React from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import Image from 'next/image';
+} from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 export default function Navbar() {
   const { user, loading, logout } = useAuth();
 
   const getInitials = (name: string) => {
     return name
-      .split(' ')
+      .split(" ")
       .map((n) => n[0])
-      .join('')
+      .join("")
       .toUpperCase()
       .substring(0, 2);
   };
 
   return (
     <div className="border-b bg-background">
-      <div className="flex h-20 items-center px-4 max-w-7xl mx-auto">
-        <div className="mr-4 flex">
+      <div className="flex h-20 justify-between items-center px-4 max-w-7xl mx-auto">
+        <div>
           <Link href="/" className="font-bold text-xl flex">
-            <Image src="/assets/logo/LogoNavbar.png" alt='Logo Navbar' width={220} height={200}/>
+            <Image
+              src="/assets/logo/LogoNavbar.png"
+              alt="Logo Navbar"
+              width={220}
+              height={200}
+            />
           </Link>
         </div>
-        <NavigationMenu className="mx-6 flex-1">
-          <NavigationMenuList>
+        <NavigationMenu>
+          <NavigationMenuList className="gap-10">
             <NavigationMenuItem>
               <Link href="/" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Home
+                  Beranda
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/agrocare" legacyBehavior passHref>
+              <Link href="/agroguide" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Agrocare
+                  Agroguide
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
@@ -64,24 +69,28 @@ export default function Navbar() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/agroguide" legacyBehavior passHref>
+              <Link href="/agrocare" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Agroguide
+                  Agrocare
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <div className="ml-auto flex items-center space-x-4">
+        <div className="flex items-center">
           {loading ? (
             <div className="text-sm px-3 py-2">Loading...</div>
           ) : user ? (
             <div className="flex items-center gap-4">
-              <span className="text-sm hidden md:inline">Hello, {user.name || user.email}</span>
+              <span className="text-sm hidden md:inline">
+                Hello, {user.name || user.email}
+              </span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="h-8 w-8 cursor-pointer">
-                    <AvatarFallback>{user.name ? getInitials(user.name) : 'U'}</AvatarFallback>
+                    <AvatarFallback>
+                      {user.name ? getInitials(user.name) : "U"}
+                    </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -94,14 +103,9 @@ export default function Navbar() {
               </DropdownMenu>
             </div>
           ) : (
-            <div className="flex items-center space-x-2">
-              <Link href="/login" legacyBehavior passHref>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link href="/login">Login</Link>
-                </Button>
-              </Link>
+            <div className="flex items-center">
               <Button size="sm" asChild>
-                <Link href="/register">Register</Link>
+                <Link href="/login">Masuk</Link>
               </Button>
             </div>
           )}
