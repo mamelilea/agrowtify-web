@@ -1,25 +1,17 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@/components/auth/AuthProvider';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 const loginSchema = z.object({
-  email: z.string().email({ message: 'Email tidak valid' }),
-  password: z.string().min(6, { message: 'Password minimal 6 karakter' }),
+  email: z.string().email({ message: "Email tidak valid" }),
+  password: z.string().min(6, { message: "Password minimal 6 karakter" }),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -31,8 +23,8 @@ export default function LoginForm() {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -42,51 +34,70 @@ export default function LoginForm() {
       await login(data.email, data.password);
     } catch (err) {
       console.error(err);
-      setError('Login gagal. Silakan periksa email dan password Anda.');
+      setError("Login gagal. Silakan periksa email dan password Anda.");
     }
   };
 
   return (
-    <Card className="max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl text-center">Login</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="Email Anda" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Password Anda" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {error && <div className="text-red-500 text-sm">{error}</div>}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Loading...' : 'Login'}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <div className="max-w-md mx-auto w-full">
+      <h1 className="text-2xl font-bold mb-2">Selamat Datang!</h1>
+      <p className="mb-6 text-sm">
+        Tidak punya akun?{" "}
+        <Link
+          href="/register"
+          className="font-medium text-black hover:underline"
+        >
+          Daftar
+        </Link>
+      </p>
+
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-2 text-sm">
+          <label htmlFor="email" className="block font-medium">
+            Email
+          </label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="Masukkan email Anda"
+            className="w-full h-10 bg-gray-100"
+            {...form.register("email")}
+          />
+          {form.formState.errors.email && (
+            <p className="text-red-500 text-xs">
+              {form.formState.errors.email.message}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2 text-sm">
+          <label htmlFor="password" className="block font-medium">
+            Password
+          </label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="Masukkan password anda"
+            className="w-full h-10 bg-gray-100"
+            {...form.register("password")}
+          />
+          {form.formState.errors.password && (
+            <p className="text-red-500 text-xs">
+              {form.formState.errors.password.message}
+            </p>
+          )}
+        </div>
+
+        {error && <div className="text-red-500 text-xs">{error}</div>}
+
+        <Button
+          type="submit"
+          className="w-full bg-black cursor-pointer text-white h-10 rounded"
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Masuk"}
+        </Button>
+      </form>
+    </div>
   );
 }

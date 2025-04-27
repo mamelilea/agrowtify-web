@@ -1,31 +1,27 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@/components/auth/AuthProvider';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
-const registerSchema = z.object({
-  name: z.string().min(1, 'Nama wajib diisi'),
-  email: z.string().email('Email tidak valid'),
-  password: z.string().min(6, 'Password minimal 6 karakter'),
-  confirmPassword: z.string().min(6, 'Konfirmasi password minimal 6 karakter'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Password tidak cocok',
-  path: ['confirmPassword'],
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(2, { message: "Nama minimal 2 karakter" }),
+    email: z.string().email({ message: "Email tidak valid" }),
+    password: z.string().min(6, { message: "Password minimal 6 karakter" }),
+    confirmPassword: z
+      .string()
+      .min(6, { message: "Konfirmasi password minimal 6 karakter" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Konfirmasi password tidak cocok",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -36,90 +32,117 @@ export default function RegisterForm() {
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
+      console.log("Form values:", data);
       setError(null);
       await registerUser(data.name, data.email, data.password);
     } catch (err) {
       console.error(err);
-      setError('Registrasi gagal. Silakan coba lagi.');
+      setError("Registrasi gagal. Silakan coba lagi.");
     }
   };
 
   return (
-    <Card className="max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl text-center">Register</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nama Anda" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="Email Anda" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Password Anda" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Konfirmasi Password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {error && <div className="text-red-500 text-sm">{error}</div>}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Loading...' : 'Register'}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <div className="max-w-md mx-auto w-full">
+      <h1 className="text-2xl font-bold mb-2">Buat Akun Baru</h1>
+      <p className="mb-6 text-sm">
+        Sudah punya akun?{" "}
+        <Link href="/login" className="font-medium text-black hover:underline">
+          Masuk
+        </Link>
+      </p>
+
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-2 text-sm">
+          <label htmlFor="name" className="block font-medium">
+            Nama Lengkap
+          </label>
+          <Input
+            id="name"
+            type="text"
+            placeholder="Masukkan nama lengkap Anda"
+            className="w-full h-10 bg-gray-100"
+            {...form.register("name")}
+          />
+          {form.formState.errors.name && (
+            <p className="text-red-500 text-xs">
+              {form.formState.errors.name.message}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2 text-sm">
+          <label htmlFor="email" className="block font-medium">
+            Email
+          </label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="Masukkan email Anda"
+            className="w-full h-10 bg-gray-100"
+            {...form.register("email")}
+          />
+          {form.formState.errors.email && (
+            <p className="text-red-500 text-xs">
+              {form.formState.errors.email.message}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2 text-sm">
+          <label htmlFor="password" className="block font-medium">
+            Password
+          </label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="Masukkan password Anda"
+            className="w-full h-10 bg-gray-100"
+            {...form.register("password")}
+          />
+          {form.formState.errors.password && (
+            <p className="text-red-500 text-xs">
+              {form.formState.errors.password.message}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2 text-sm">
+          <label htmlFor="confirmPassword" className="block font-medium">
+            Konfirmasi Password
+          </label>
+          <Input
+            id="confirmPassword"
+            type="password"
+            placeholder="Konfirmasi password Anda"
+            className="w-full h-10 bg-gray-100"
+            {...form.register("confirmPassword")}
+          />
+          {form.formState.errors.confirmPassword && (
+            <p className="text-red-500 text-xs">
+              {form.formState.errors.confirmPassword.message}
+            </p>
+          )}
+        </div>
+
+        {error && <div className="text-red-500 text-xs">{error}</div>}
+
+        <Button
+          type="submit"
+          className="w-full bg-black cursor-pointer text-white h-10 rounded"
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Daftar"}
+        </Button>
+      </form>
+    </div>
   );
 }
