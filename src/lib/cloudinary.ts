@@ -1,8 +1,5 @@
-// src/lib/cloudinary.ts
-
 import { v2 as cloudinary } from "cloudinary";
 
-// Initialize Cloudinary configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -12,7 +9,6 @@ cloudinary.config({
 
 export default cloudinary;
 
-// Helper function to upload media files
 export async function uploadMedia(
   file: Buffer,
   options: {

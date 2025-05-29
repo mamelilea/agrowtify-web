@@ -1,5 +1,3 @@
-// src/app/api/agrocare/journal/entries/[id]/route.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth-node";
@@ -7,7 +5,6 @@ import cloudinary from "@/lib/cloudinary";
 
 export const runtime = "nodejs";
 
-// GET - /api/agrocare/journal/entries/[id]
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
@@ -41,7 +38,6 @@ export async function GET(
       );
     }
 
-    // Verify ownership
     if (journal.userId !== session.id) {
       return NextResponse.json(
         { error: "Unauthorized access to this journal entry" },
@@ -59,7 +55,6 @@ export async function GET(
   }
 }
 
-// DELETE - /api/agrocare/journal/entries/[id]
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } },
@@ -71,7 +66,6 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Find the journal entry
     const journal = await prisma.journal.findUnique({
       where: {
         id: params.id,
@@ -88,7 +82,6 @@ export async function DELETE(
       );
     }
 
-    // Verify ownership
     if (journal.userId !== session.id) {
       return NextResponse.json(
         { error: "Unauthorized access to this journal entry" },
@@ -96,12 +89,10 @@ export async function DELETE(
       );
     }
 
-    // Delete media files from Cloudinary
     for (const media of journal.media) {
       await cloudinary.uploader.destroy(media.fileKey);
     }
 
-    // Delete the journal entry (will cascade delete answers and media records)
     await prisma.journal.delete({
       where: {
         id: params.id,
@@ -118,7 +109,6 @@ export async function DELETE(
   }
 }
 
-// PATCH - /api/agrocare/journal/entries/[id]
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } },
@@ -130,7 +120,6 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Find the journal entry
     const journal = await prisma.journal.findUnique({
       where: {
         id: params.id,
@@ -144,7 +133,6 @@ export async function PATCH(
       );
     }
 
-    // Verify ownership
     if (journal.userId !== session.id) {
       return NextResponse.json(
         { error: "Unauthorized access to this journal entry" },
@@ -154,7 +142,6 @@ export async function PATCH(
 
     const data = await request.json();
 
-    // Update title, date, or plantId
     const updatedJournal = await prisma.journal.update({
       where: {
         id: params.id,

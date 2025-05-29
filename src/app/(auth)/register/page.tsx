@@ -30,15 +30,14 @@ export default function RegisterPage() {
         <RegisterForm />
       </div>
 
-      {/* Right side - Brand image */}
       <div className="w-1/2 hidden md:flex flex-col items-center justify-center relative bg-white h-full">
-          <Image
-            src="/assets/logo/LogoLogin.png"
-            alt="Agrowtify Logo"
-            width={300}
-            height={300}
-            className="object-contain"
-          />
+        <Image
+          src="/assets/logo/LogoLogin.png"
+          alt="Agrowtify Logo"
+          width={300}
+          height={300}
+          className="object-contain"
+        />
       </div>
     </div>
   );

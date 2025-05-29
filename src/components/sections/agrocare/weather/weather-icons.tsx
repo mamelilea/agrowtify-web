@@ -4,7 +4,7 @@ import { Cloud, CloudRain, Sun } from "lucide-react";
 
 export const getWeatherIconComponent = (
   condition: string,
-  size: number = 24
+  size: number = 24,
 ) => {
   switch (condition?.toLowerCase()) {
     case "clear":

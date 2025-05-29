@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 
 async function getAgroguideDetail(id: string) {
-  const res = await fetch(`http://localhost:3000//api/agroguide/${id}`, {
+  const res = await fetch(`/api/agroguide/${id}`, {
     cache: "no-store",
   });
   if (!res.ok) return null;
@@ -28,7 +28,6 @@ export default async function AgroguideDetailPage({
     url,
   } = data;
 
-  // Format tanggal
   const date = new Date(createdAt);
   const formattedDate = date.toLocaleDateString("id-ID", {
     day: "2-digit",
@@ -71,7 +70,6 @@ export default async function AgroguideDetailPage({
                   Video
                 </td>
                 <td className="p-2 border-b border-gray-100">
-                  {/* Embed YouTube/Vimeo jika url mengandung youtube/vimeo */}
                   {url && url.includes("youtube") ? (
                     <iframe
                       width="320"

@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ['encrypted-tbn0.gstatic.com','via.placeholder.com'],
+    domains: ["encrypted-tbn0.gstatic.com", "via.placeholder.com"],
   },
 };
 

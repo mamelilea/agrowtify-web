@@ -8,7 +8,6 @@ type RouteParams = {
   params: { id: string };
 };
 
-// GET
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const { id } = params;
   try {
@@ -31,7 +30,6 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// PUT
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   const { id } = params;
   try {
@@ -76,7 +74,6 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// DELETE
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   const { id } = params;
   try {

@@ -13,7 +13,7 @@ export function CurrentWeather({
   const currentDayAndDate = format(
     fromUnixTime(timestamp),
     "EEEE, d MMMM yyyy",
-    { locale: id }
+    { locale: id },
   );
 
   return (

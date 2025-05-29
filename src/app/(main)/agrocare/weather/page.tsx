@@ -1,15 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-// import { useRouter } from "next/navigation"; // Router tidak dibutuhkan
 import {
   Card,
   CardContent,
-  CardFooter, // Tetap impor jika Button digunakan untuk error retry
-  CardHeader, // Tetap impor jika Button digunakan untuk error retry
-  CardTitle, // Tetap impor jika Button digunakan untuk error retry
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button"; // Tetap impor jika Button digunakan untuk error retry
+import { Button } from "@/components/ui/button";
 import {
   Loader2,
   AlertCircle,
@@ -18,7 +17,7 @@ import {
   CloudRain,
   Sun,
   Thermometer,
-} from "lucide-react"; // Tambahkan icons cuaca
+} from "lucide-react";
 import { format, fromUnixTime } from "date-fns";
 import { id } from "date-fns/locale";
 import { WeatherHeader } from "@/components/sections/agrocare/weather/WeatherHeader";
@@ -28,10 +27,18 @@ import { WeatherCareCard } from "@/components/sections/agrocare/weather/WeatherC
 import { WeatherError } from "@/components/sections/agrocare/weather/WeatherError";
 import { WeatherLoading } from "@/components/sections/agrocare/weather/WeatherLoading";
 
-// import WeatherForecastDisplay from "@/components/sections/agrocare/weather-forecast-display/WeatherForecastDisplay"; // Tidak digunakan
-// import CareRecommendations from "@/components/sections/agrocare/care-recommendations/CareRecommendations"; // Tidak digunakan
+interface WeatherData {
+  current: {
+    temp: number;
+    dt: number;
+  };
+  daily: Array<{
+    dt: number;
+    temp: { day: number };
+    weather: Array<{ main: string }>;
+  }>;
+}
 
-// Helper function to get weather icon component based on condition
 const getWeatherIconComponent = (condition: string, size: number = 24) => {
   switch (condition?.toLowerCase()) {
     case "clear":
@@ -49,17 +56,13 @@ const getWeatherIconComponent = (condition: string, size: number = 24) => {
 };
 
 export default function WeatherPage() {
-  // const router = useRouter();
-
-  // --- State untuk data cuaca dan lokasi ---
   const [loading, setLoading] = useState(true);
   const [locationError, setLocationError] = useState<string | null>(null);
-  const [weatherData, setWeatherData] = useState<any>(null);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [locationName, setLocationName] = useState<string>(
-    "Mendapatkan lokasi..." // Default text saat loading
+    "Mendapatkan lokasi...",
   );
 
-  // --- Get user location & fetch data dari backend ---
   useEffect(() => {
     const getUserLocationAndFetchData = () => {
       if (navigator.geolocation) {
@@ -68,9 +71,8 @@ export default function WeatherPage() {
             try {
               const { latitude, longitude } = position.coords;
 
-              // Panggil API backend lokal yang sekarang mengurus Nominatim dan OpenWeather
               const response = await fetch(
-                `/api/agrocare/weather?lat=${latitude}&lon=${longitude}`
+                `/api/agrocare/weather?lat=${latitude}&lon=${longitude}`,
               );
 
               if (!response.ok) {
@@ -78,7 +80,7 @@ export default function WeatherPage() {
                 console.error(
                   "Backend Weather API fetch failed:",
                   response.status,
-                  errorBody
+                  errorBody,
                 );
                 let errorDetail = response.statusText;
                 try {
@@ -91,33 +93,31 @@ export default function WeatherPage() {
 
               const data = await response.json();
 
-              // Validasi dan simpan data cuaca dan nama lokasi dari respons backend
               if (
                 !data ||
                 !data.forecast ||
                 !data.forecast.current ||
                 !data.forecast.daily ||
-                !data.locationName // Pastikan ada locationName
+                !data.locationName
               ) {
                 console.error("Invalid data structure from backend API:", data);
                 throw new Error("Format data dari server tidak valid.");
               }
 
-              setWeatherData(data.forecast); // Data cuaca
-              setLocationName(data.locationName); // Nama lokasi dari backend
+              setWeatherData(data.forecast);
+              setLocationName(data.locationName);
 
-              setLoading(false); // Loading selesai
+              setLoading(false);
             } catch (error: any) {
               console.error("Error fetching data from backend:", error);
               setLocationError(
                 error.message ||
-                  "Terjadi kesalahan saat mengambil data. Silakan coba lagi."
+                  "Terjadi kesalahan saat mengambil data. Silakan coba lagi.",
               );
               setLoading(false);
             }
           },
           (error) => {
-            // Geolocation error handler
             console.error("Geolocation error:", error);
             let errorMessage = "Gagal mendapatkan lokasi. ";
             switch (error.code) {
@@ -137,17 +137,16 @@ export default function WeatherPage() {
             }
             setLocationError(errorMessage);
             setLoading(false);
-          }
+          },
         );
       } else {
-        // Browser does not support geolocation
         setLocationError("Browser tidak mendukung geolokasi.");
         setLoading(false);
       }
     };
 
     getUserLocationAndFetchData();
-  }, []); // Efek ini hanya berjalan sekali saat komponen mount
+  }, []);
 
   if (loading) return <WeatherLoading />;
   if (locationError)

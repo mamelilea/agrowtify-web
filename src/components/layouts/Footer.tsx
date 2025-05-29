@@ -1,6 +1,6 @@
 import React from "react";
-import Image from "next/image"; // Assuming Next.js for Image component
-import Link from "next/link"; // Assuming Next.js for Link component
+import Image from "next/image";
+import Link from "next/link";
 import {
   FaInstagram,
   FaTiktok,
@@ -14,10 +14,8 @@ export default function Footer() {
   return (
     <footer className="bg-white text-gray-800 pt-10 pb-6 border-t flex flex-col items-center">
       <div className="w-[80%] mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-20">
-        {/* Left Section: Logo, Tagline, Description, Socials */}
         <div className="col-span-2">
           <div className="flex items-center mb-4">
-            {/* Replace with your actual logo path */}
             <Image
               src="/assets/logo/LogoFooter.png"
               alt="Agrowtify Logo"
@@ -32,7 +30,6 @@ export default function Footer() {
             berdaya guna!
           </p>
           <div className="flex space-x-4">
-            {/* Social Icons - Replace with actual links */}
             <Link href="#">
               <FaInstagram size={24} className="text-green-800" />
             </Link>
@@ -51,7 +48,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Middle Section: Fitur Utama */}
         <div className="text-primary-400">
           <h4 className="text-lg font-bold mb-4">Fitur Utama</h4>
           <ul className="flex flex-col gap-3 font-medium">
@@ -67,7 +63,6 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Right Section: Kontak */}
         <div className="text-primary-400">
           <h4 className="text-lg font-semibold mb-4">Kontak</h4>
           <div className="flex flex-col gap-3">
@@ -83,7 +78,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Section: Copyright */}
       <div className="mt-8 text-center text-sm text-gray-600 w-[80%] pt-8 border-t-4 border-black">
         &copy; Copyright 2025. Team Agrowtify. All Rights Reserved
       </div>

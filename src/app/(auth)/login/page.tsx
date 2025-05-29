@@ -30,7 +30,6 @@ export default function LoginPage() {
         <LoginForm />
       </div>
 
-      {/* Right side - Brand image */}
       <div className="w-1/2 hidden md:flex flex-col items-center justify-center relative bg-white h-full">
         <Image
           src="/assets/logo/LogoLogin.png"

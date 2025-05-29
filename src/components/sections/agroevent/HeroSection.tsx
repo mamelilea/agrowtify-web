@@ -17,10 +17,8 @@ export default function HeroSection() {
           className="w-full h-auto block z-0"
         />
 
-        {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white z-10"></div>
 
-        {/* Content */}
         <div className="absolute inset-0 z-20 flex flex-col items-center pt-50">
           <div className="w-[90%] flex items-center justify-center">
             <div className="w-7/12 font-platypi text-white space-y-3 mt-20">

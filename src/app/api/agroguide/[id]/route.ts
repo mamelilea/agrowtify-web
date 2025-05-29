@@ -3,7 +3,6 @@ import prisma from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth-node";
 export const runtime = "nodejs";
 
-// GET - /api/agroguide/[id]
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } },
@@ -31,7 +30,6 @@ export async function GET(
   }
 }
 
-// PUT - /api/agroguide/[id]
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } },
@@ -86,7 +84,6 @@ export async function PUT(
   }
 }
 
-// DELETE - /api/agroguide/[id]
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } },

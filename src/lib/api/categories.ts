@@ -1,10 +1,9 @@
-// lib/api/categories.ts
 import prisma from "@/lib/db";
 
 export interface Category {
   id: string;
   name: string;
-  description?: string;
+  description?: string | null;
 }
 
 export async function getCategories(): Promise<Category[]> {

@@ -4,7 +4,6 @@ import { getSessionFromRequest } from "@/lib/auth-node";
 
 export const runtime = "nodejs";
 
-// GET - /api/agrocare/journal/questions
 export async function GET(request: NextRequest) {
   try {
     const session = await getSessionFromRequest(request);
@@ -29,7 +28,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - /api/agrocare/journal/questions (Admin only)
 export async function POST(request: NextRequest) {
   try {
     const session = await getSessionFromRequest(request);
@@ -51,7 +49,6 @@ export async function POST(request: NextRequest) {
 
     const data = await request.json();
 
-    // Validate required fields
     if (!data.question || data.orderIndex === undefined) {
       return NextResponse.json(
         { error: "Question text and order index are required" },

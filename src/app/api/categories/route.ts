@@ -1,10 +1,8 @@
-// app/api/categories/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth-node";
 export const runtime = "nodejs";
 
-// GET - /api/categories
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -13,7 +11,6 @@ export async function GET(request: NextRequest) {
     let categories;
 
     if (includeCount) {
-      // Include count of published content for each category
       categories = await prisma.category.findMany({
         orderBy: {
           name: "asc",
@@ -47,16 +44,15 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching categories:", error);
     return NextResponse.json(
-      { 
+      {
         error: "Failed to fetch categories",
-        details: process.env.NODE_ENV === 'development' ? error : undefined
+        details: process.env.NODE_ENV === "development" ? error : undefined,
       },
       { status: 500 },
     );
   }
 }
 
-// POST - /api/categories
 export async function POST(request: NextRequest) {
   try {
     const session = await getSessionFromRequest(request);
@@ -87,13 +83,12 @@ export async function POST(request: NextRequest) {
 
     const trimmedName = name.trim();
 
-    // Check if category already exists (case-insensitive)
     const existingCategory = await prisma.category.findFirst({
-      where: { 
+      where: {
         name: {
           equals: trimmedName,
-          mode: "insensitive"
-        }
+          mode: "insensitive",
+        },
       },
     });
 
@@ -118,9 +113,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error creating category:", error);
     return NextResponse.json(
-      { 
+      {
         error: "Failed to create category",
-        details: process.env.NODE_ENV === 'development' ? error : undefined
+        details: process.env.NODE_ENV === "development" ? error : undefined,
       },
       { status: 500 },
     );

@@ -21,7 +21,6 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Debounced search function
   const debounce = useCallback((func: Function, delay: number) => {
     let timeoutId: NodeJS.Timeout;
     return (...args: any[]) => {
@@ -30,7 +29,6 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
     };
   }, []);
 
-  // Function to fetch content based on filters
   const fetchContent = useCallback(
     async (category: string | null, search: string) => {
       try {
@@ -59,28 +57,24 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
         setLoading(false);
       }
     },
-    []
+    [],
   );
 
-  // Debounced search
   const debouncedFetchContent = useCallback(
     debounce((category: string | null, search: string) => {
       fetchContent(category, search);
     }, 300),
-    [fetchContent, debounce]
+    [fetchContent, debounce],
   );
 
-  // Initial fetch
   useEffect(() => {
     fetchContent(selectedCategory, searchTerm);
   }, []);
 
-  // Fetch when category changes
   useEffect(() => {
     fetchContent(selectedCategory, searchTerm);
   }, [selectedCategory, fetchContent]);
 
-  // Debounced search when search term changes
   useEffect(() => {
     if (searchTerm !== "") {
       debouncedFetchContent(selectedCategory, searchTerm);
@@ -104,7 +98,6 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      {/* Header Section */}
       <div className="bg-gradient-to-b from-primary-200 to-white text-white py-16 pt-40 px-6">
         <div className="max-w-6xl mx-auto text-center font-platypi text-primary-400">
           <h1 className="text-5xl md:text-6xl font-bold mb-4">Agroguide</h1>
@@ -114,9 +107,7 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
         </div>
       </div>
 
-      {/* Content Section */}
       <div className="max-w-6xl mx-auto px-6 py-8">
-        {/* Search Bar */}
         <div className="mb-8">
           <div className="relative max-w-2xl mx-auto">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -132,13 +123,10 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
           </div>
         </div>
 
-        {/* Divider */}
         <hr className="border-gray-200 mb-8" />
 
-        {/* Category Filters */}
         <div className="mb-8">
           <div className="flex flex-wrap gap-3 items-center justify-center md:justify-start">
-            {/* All Categories Button */}
             <button
               className={`px-6 py-3 text-sm font-medium border rounded-full transition-all duration-200 ${
                 selectedCategory === null
@@ -150,14 +138,13 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
               Semua
             </button>
 
-            {/* Category Buttons */}
             {categories.map((category) => (
               <button
                 key={category.id}
                 className={`px-6 py-3 text-sm font-medium border rounded-full transition-all duration-200 ${
                   selectedCategory === category.id
                     ? "bg-primary-400 text-white border-primary-400 shadow-lg"
-                  : "border-primary-200 text-gray-700 hover:bg-gray-50 hover:border-primary-400"
+                    : "border-primary-200 text-gray-700 hover:bg-gray-50 hover:border-primary-400"
                 }`}
                 onClick={() => handleCategoryClick(category.id)}
               >
@@ -165,7 +152,6 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
               </button>
             ))}
 
-            {/* Filter Icon */}
             <button
               className="px-4 py-3 border border-gray-300 rounded-full hover:bg-gray-50 text-gray-700 transition-colors"
               title="Filter"
@@ -175,7 +161,6 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
             </button>
           </div>
 
-          {/* Active Filters Display */}
           {(selectedCategory || searchTerm) && (
             <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
               <span>Filter aktif:</span>
@@ -199,7 +184,6 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
           )}
         </div>
 
-        {/* Content Grid */}
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>

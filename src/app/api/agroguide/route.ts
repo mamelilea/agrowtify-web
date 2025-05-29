@@ -1,11 +1,9 @@
-// app/api/agroguide/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth-node";
 import { ContentType, Prisma } from "@prisma/client";
 export const runtime = "nodejs";
 
-// GET - /api/agroguide
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -13,19 +11,17 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search");
     const type = searchParams.get("type");
     const page = parseInt(searchParams.get("page") || "1");
-    const limit = Math.min(parseInt(searchParams.get("limit") || "10"), 50); // Max 50 items
+    const limit = Math.min(parseInt(searchParams.get("limit") || "10"), 50);
     const skip = (page - 1) * limit;
 
-    const where: Prisma.AgroguideContentWhereInput = { 
-      isPublished: true 
+    const where: Prisma.AgroguideContentWhereInput = {
+      isPublished: true,
     };
 
-    // Category filter
     if (category && category.trim()) {
       where.categoryId = category.trim();
     }
 
-    // Enhanced search functionality - search by title and description
     if (search && search.trim()) {
       const searchTerm = search.trim();
       where.OR = [
@@ -34,12 +30,10 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    // Content type filter
     if (type && (type === "ARTICLE" || type === "VIDEO")) {
       where.contentType = type as ContentType;
     }
 
-    // Execute query with optimized includes
     const [content, total] = await Promise.all([
       prisma.agroguideContent.findMany({
         where,
@@ -52,10 +46,7 @@ export async function GET(request: NextRequest) {
             },
           },
         },
-        orderBy: [
-          { createdAt: "desc" },
-          { title: "asc" }
-        ],
+        orderBy: [{ createdAt: "desc" }, { title: "asc" }],
         skip,
         take: limit,
       }),
@@ -81,16 +72,15 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching agroguide content:", error);
     return NextResponse.json(
-      { 
+      {
         error: "Failed to fetch agroguide content",
-        details: process.env.NODE_ENV === 'development' ? error : undefined
+        details: process.env.NODE_ENV === "development" ? error : undefined,
       },
       { status: 500 },
     );
   }
 }
 
-// POST - /api/agroguide
 export async function POST(request: NextRequest) {
   try {
     const session = await getSessionFromRequest(request);
@@ -112,7 +102,6 @@ export async function POST(request: NextRequest) {
 
     const data = await request.json();
 
-    // Validate required fields
     const requiredFields = [
       "title",
       "description",
@@ -120,16 +109,15 @@ export async function POST(request: NextRequest) {
       "url",
       "categoryId",
     ];
-    
-    const missingFields = requiredFields.filter(field => !data[field]);
+
+    const missingFields = requiredFields.filter((field) => !data[field]);
     if (missingFields.length > 0) {
       return NextResponse.json(
-        { error: `Required fields missing: ${missingFields.join(', ')}` },
+        { error: `Required fields missing: ${missingFields.join(", ")}` },
         { status: 400 },
       );
     }
 
-    // Validate content type
     if (!["ARTICLE", "VIDEO"].includes(data.contentType)) {
       return NextResponse.json(
         { error: "contentType must be either 'ARTICLE' or 'VIDEO'" },
@@ -137,7 +125,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate category exists
     const categoryExists = await prisma.category.findUnique({
       where: { id: data.categoryId },
     });
@@ -149,7 +136,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create content
     const content = await prisma.agroguideContent.create({
       data: {
         title: data.title.trim(),
@@ -173,18 +159,18 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(
-      { 
-        message: "Agroguide content created successfully", 
-        content 
+      {
+        message: "Agroguide content created successfully",
+        content,
       },
       { status: 201 },
     );
   } catch (error) {
     console.error("Error creating agroguide content:", error);
     return NextResponse.json(
-      { 
+      {
         error: "Failed to create agroguide content",
-        details: process.env.NODE_ENV === 'development' ? error : undefined
+        details: process.env.NODE_ENV === "development" ? error : undefined,
       },
       { status: 500 },
     );

@@ -5,16 +5,16 @@ export default function AboutSection() {
       style={{
         backgroundImage: `url('/assets/images/home/bg-AboutHome.png')`,
         backgroundRepeat: "no-repeat",
-        backgroundPosition: "top center", // Pastikan menampilkan bagian bawah gambar
-        backgroundSize: "100% auto", // Gunakan lebar 100% dengan tinggi proporsional
-        minHeight: "800px", // Tetapkan tinggi minimum yang lebih spesifik
+        backgroundPosition: "top center",
+        backgroundSize: "100% auto",
+        minHeight: "800px",
         width: "100%",
         position: "relative",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        overflow: "visible", // Pastikan tidak ada yang dipotong
+        overflow: "visible",
       }}
     >
       <div className="flex items-center justify-center py-64 w-full">

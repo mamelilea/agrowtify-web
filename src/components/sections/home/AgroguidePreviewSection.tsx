@@ -95,18 +95,14 @@ export default function AgroguidePreviewSection() {
             {content.description}
           </p>{" "}
         </div>
-        {/* You can add a link here if the card is clickable */}
-        {/* <a href={content.url} className="text-blue-500 hover:underline mt-3 inline-block">Read More</a> */}
       </div>
     </div>
   );
 
-  // Placeholder card component
   const PlaceholderCard = () => (
     <div className="bg-primary-200 rounded-lg shadow-md overflow-hidden flex flex-col animate-pulse">
-      {/* Placeholder Image */}
       <div className="w-full h-48 bg-gray-700"></div>
-      {/* Placeholder Content */}
+
       <div className="p-4 flex-grow flex flex-col justify-between">
         <div>
           <div className="h-4 bg-gray-700 rounded w-1/4 mb-2"></div>
@@ -125,7 +121,6 @@ export default function AgroguidePreviewSection() {
     return (
       <div className="bg-primary-100 h-full min-h-screen py-20">
         <div className="w-[80%] mx-auto space-y-12">
-          {/* Articles Section Loading */}
           <div>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-5xl font-platypi font-extrabold text-white">
@@ -142,7 +137,6 @@ export default function AgroguidePreviewSection() {
             </div>
           </div>
 
-          {/* Videos Section Loading */}
           <div>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-5xl font-platypi font-extrabold text-white">
@@ -169,7 +163,6 @@ export default function AgroguidePreviewSection() {
     <div className="bg-primary-100 h-full min-h-screen py-20">
       <div className="w-[80%] mx-auto space-y-12">
         {" "}
-        {/* Articles Section */}
         <div>
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-5xl font-platypi font-extrabold text-white">
@@ -183,7 +176,6 @@ export default function AgroguidePreviewSection() {
             {articles.map(renderContentCard)}
           </div>
         </div>
-        {/* Videos Section */}
         <div>
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-5xl font-platypi font-extrabold text-white">

@@ -1,10 +1,8 @@
-// src/app/api/agrocare/plants/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth-node";
 export const runtime = "nodejs";
 
-// GET - /api/agrocare/plants
 export async function GET(request: NextRequest) {
   try {
     const session = await getSessionFromRequest(request);
@@ -13,11 +11,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check if there are any plants in the database
     const plantCount = await prisma.plant.count();
 
     if (plantCount === 0) {
-      // If no plants exist, create default ones
       await createDefaultPlants();
     }
 
@@ -37,7 +33,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Function to create default plants if none exist
 async function createDefaultPlants() {
   const defaultPlants = [
     {
@@ -93,7 +88,6 @@ async function createDefaultPlants() {
   console.log("Default plants created successfully");
 }
 
-// POST - /api/agrocare/plants
 export async function POST(request: NextRequest) {
   try {
     const session = await getSessionFromRequest(request);

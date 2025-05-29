@@ -16,45 +16,48 @@ type WeatherData = {
 };
 
 async function fetchLocationName(lat: number, lon: number): Promise<string> {
-    try {
-        const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`,
-            {
-                headers: {
-                    'User-Agent': 'AgrowtifyBackend/1.0 (contact-email@example.com)',
-                }
-            }
-        );
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`,
+      {
+        headers: {
+          "User-Agent": "AgrowtifyBackend/1.0 (contact-email@example.com)",
+        },
+      },
+    );
 
-        if (!response.ok) {
-            console.warn(`Nominatim fetch failed with status: ${response.status}`, await response.text());
-            return `Koordinat: ${lat.toFixed(4)}, ${lon.toFixed(4)} (Nama tidak didapat)`;
-        }
-
-        const data = await response.json();
-
-        let determinedLocationName = `Koordinat: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-
-        if (data && data.address) {
-            determinedLocationName =
-                data.address.city ||
-                data.address.town ||
-                data.address.village ||
-                data.address.county ||
-                data.address.state ||
-                data.address.country ||
-                data.display_name;
-        } else if (data && data.display_name) {
-             determinedLocationName = data.display_name;
-        } else {
-            console.warn("Nominatim response OK but no useful name found:", data);
-        }
-
-        return determinedLocationName;
-    } catch (error) {
-        console.error("Error fetching location name from Nominatim:", error);
-        return `Koordinat: ${lat.toFixed(4)}, ${lon.toFixed(4)} (Error mengambil nama)`;
+    if (!response.ok) {
+      console.warn(
+        `Nominatim fetch failed with status: ${response.status}`,
+        await response.text(),
+      );
+      return `Koordinat: ${lat.toFixed(4)}, ${lon.toFixed(4)} (Nama tidak didapat)`;
     }
+
+    const data = await response.json();
+
+    let determinedLocationName = `Koordinat: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+
+    if (data && data.address) {
+      determinedLocationName =
+        data.address.city ||
+        data.address.town ||
+        data.address.village ||
+        data.address.county ||
+        data.address.state ||
+        data.address.country ||
+        data.display_name;
+    } else if (data && data.display_name) {
+      determinedLocationName = data.display_name;
+    } else {
+      console.warn("Nominatim response OK but no useful name found:", data);
+    }
+
+    return determinedLocationName;
+  } catch (error) {
+    console.error("Error fetching location name from Nominatim:", error);
+    return `Koordinat: ${lat.toFixed(4)}, ${lon.toFixed(4)} (Error mengambil nama)`;
+  }
 }
 
 async function fetchWeatherData(lat: number, lon: number) {
@@ -497,8 +500,8 @@ export async function GET(request: NextRequest) {
     const locationName = await fetchLocationName(lat, lon);
 
     const responsePayload = {
-        forecast: weatherData,
-        locationName: locationName,
+      forecast: weatherData,
+      locationName: locationName,
     };
 
     const forecastRecord = await prisma.weatherForecast.create({

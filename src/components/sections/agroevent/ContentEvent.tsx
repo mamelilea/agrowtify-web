@@ -33,7 +33,6 @@ export default function ContentEvent() {
     fetchEvents();
   }, []);
 
-  // Format tanggal seperti "Minggu, 13 November 2025"
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
@@ -45,7 +44,6 @@ export default function ContentEvent() {
     return date.toLocaleDateString("id-ID", options);
   };
 
-  // Format waktu seperti "10.00 - 12.00 WIB"
   const formatTime = (startDateString: string, endDateString: string) => {
     const start = new Date(startDateString);
     const end = new Date(endDateString);
@@ -70,7 +68,6 @@ export default function ContentEvent() {
           key={event.id}
           className="bg-primary-400 rounded-lg shadow-lg flex flex-col md:flex-row w-full max-w-4xl h-[500px] overflow-hidden"
         >
-          {/* Event Image */}
           <div className="w-full md:w-2/5 h-full">
             <img
               src={event.imageUrl || "/assets/images/event-placeholder.png"}
@@ -78,7 +75,7 @@ export default function ContentEvent() {
               className="w-full h-full object-cover"
             />
           </div>
-          {/* Event Details */}
+
           <div className="w-full md:w-3/5 p-8 flex flex-col justify-center text-white h-full overflow-hidden">
             <h3 className="text-4xl font-semibold mb-4 line-clamp-2">
               {event.title}
@@ -87,9 +84,7 @@ export default function ContentEvent() {
               {event.description}
             </p>
             <div className="space-y-4">
-              {/* Date */}
               <div className="flex items-center space-x-3">
-                {/* Calendar Icon */}
                 <svg
                   className="w-6 h-6 text-white flex-shrink-0"
                   fill="none"
@@ -108,9 +103,8 @@ export default function ContentEvent() {
                   {formatDate(event.startDate)}
                 </span>
               </div>
-              {/* Time */}
+
               <div className="flex items-center space-x-3">
-                {/* Clock Icon */}
                 <svg
                   className="w-6 h-6 text-white flex-shrink-0"
                   fill="none"
@@ -129,9 +123,8 @@ export default function ContentEvent() {
                   {formatTime(event.startDate, event.endDate)}
                 </span>
               </div>
-              {/* Location */}
+
               <div className="flex items-center space-x-3">
-                {/* Location Icon */}
                 <svg
                   className="w-6 h-6 text-white flex-shrink-0"
                   fill="none"

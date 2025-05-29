@@ -1,10 +1,8 @@
-// app/agroguide/artikel/page.tsx
 import { Suspense } from "react";
 import ContentArtikel from "@/components/sections/agroguide/artikel/ContentArtikel";
 import { getCategories } from "@/lib/api/categories";
 
 export default async function AgroguideArtikelPage() {
-  // Fetch categories at page level (server-side)
   const categories = await getCategories();
 
   return (

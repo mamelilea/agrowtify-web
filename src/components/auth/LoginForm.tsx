@@ -43,10 +43,7 @@ export default function LoginForm() {
       <h1 className="text-4xl font-bold mb-2">Selamat Datang!</h1>
       <p className="mb-6 text-sm">
         Tidak punya akun?{" "}
-        <Link
-          href="/register"
-          className="font-bold text-white hover:underline"
-        >
+        <Link href="/register" className="font-bold text-white hover:underline">
           Daftar
         </Link>
       </p>

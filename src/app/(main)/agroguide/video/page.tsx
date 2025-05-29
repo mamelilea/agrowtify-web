@@ -1,10 +1,8 @@
-// app/agroguide/video/page.tsx
 import { Suspense } from "react";
 import ContentVideo from "@/components/sections/agroguide/video/ContentVideo";
 import { getCategories } from "@/lib/api/categories";
 
 export default async function AgroguideVideoPage() {
-  // Fetch categories at page level (server-side)
   const categories = await getCategories();
 
   return (

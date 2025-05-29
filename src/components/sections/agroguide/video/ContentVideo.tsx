@@ -21,7 +21,6 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Debounced search function
   const debounce = useCallback(
     <T extends (...args: any[]) => void>(func: T, delay: number) => {
       let timeoutId: NodeJS.Timeout;
@@ -30,10 +29,9 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
         timeoutId = setTimeout(() => func(...args), delay);
       };
     },
-    []
+    [],
   );
 
-  // Function to fetch content based on filters
   const fetchContent = useCallback(
     async (category: string | null, search: string) => {
       try {
@@ -62,28 +60,24 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
         setLoading(false);
       }
     },
-    []
+    [],
   );
 
-  // Debounced search
   const debouncedFetchContent = useCallback(
     debounce((category: string | null, search: string) => {
       fetchContent(category, search);
     }, 300),
-    [fetchContent, debounce]
+    [fetchContent, debounce],
   );
 
-  // Initial fetch
   useEffect(() => {
     fetchContent(selectedCategory, searchTerm);
   }, []);
 
-  // Fetch when category changes
   useEffect(() => {
     fetchContent(selectedCategory, searchTerm);
   }, [selectedCategory, fetchContent]);
 
-  // Debounced search when search term changes
   useEffect(() => {
     if (searchTerm !== "") {
       debouncedFetchContent(selectedCategory, searchTerm);
@@ -107,7 +101,6 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
 
   return (
     <div className="min-h-screen w-full bg-white">
-      {/* Header Section */}
       <div className="bg-gradient-to-b from-primary-200 to-white text-white py-16 pt-40 px-6">
         <div className="max-w-6xl mx-auto text-center font-platypi text-primary-400">
           <div className="flex items-center justify-center mb-4">
@@ -119,9 +112,7 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
         </div>
       </div>
 
-      {/* Content Section */}
       <div className="max-w-6xl mx-auto px-6 py-8 bg-white">
-        {/* Search Bar */}
         <div className="mb-8">
           <div className="relative max-w-2xl mx-auto">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -137,13 +128,10 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
           </div>
         </div>
 
-        {/* Divider */}
         <hr className="border-gray-200 mb-8" />
 
-        {/* Category Filters */}
         <div className="mb-8 flex flex-col justify-center items-start">
           <div className="flex flex-wrap gap-3 items-center justify-center md:justify-start">
-            {/* All Categories Button */}
             <button
               className={`px-6 py-3 text-sm font-medium border rounded-full transition-all duration-200 ${
                 selectedCategory === null
@@ -155,7 +143,6 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
               Semua
             </button>
 
-            {/* Category Buttons */}
             {categories.map((category) => (
               <button
                 key={category.id}
@@ -170,7 +157,6 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
               </button>
             ))}
 
-            {/* Filter Icon */}
             <button
               className="px-4 py-3 border border-gray-300 rounded-full hover:bg-gray-50 text-gray-700 transition-colors"
               title="Filter"
@@ -180,7 +166,6 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
             </button>
           </div>
 
-          {/* Active Filters Display */}
           {(selectedCategory || searchTerm) && (
             <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
               <span>Filter aktif:</span>
@@ -204,7 +189,6 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
           )}
         </div>
 
-        {/* Content Grid */}
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
