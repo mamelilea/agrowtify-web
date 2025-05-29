@@ -25,24 +25,20 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex w-full">
-      <div className="w-1/2 flex flex-col items-center px-10 md:px-20">
+    <div className="flex w-full h-full">
+      <div className="w-1/2 flex flex-col items-center justify-center px-10 md:px-20">
         <RegisterForm />
       </div>
 
       {/* Right side - Brand image */}
-      <div className="w-1/2 hidden md:block relative">
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-10">
-          <div className="w-64 h-64 mb-6">
-            <Image
-              src="/assets/logo/LogoLogin.png"
-              alt="Agrowtify Logo"
-              width={300}
-              height={300}
-              className="object-contain"
-            />
-          </div>
-        </div>
+      <div className="w-1/2 hidden md:flex flex-col items-center justify-center relative bg-white h-full">
+          <Image
+            src="/assets/logo/LogoLogin.png"
+            alt="Agrowtify Logo"
+            width={300}
+            height={300}
+            className="object-contain"
+          />
       </div>
     </div>
   );

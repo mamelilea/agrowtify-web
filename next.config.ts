@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  images: {
+    domains: ['encrypted-tbn0.gstatic.com','via.placeholder.com'],
+  },
 };
 
 export default nextConfig;

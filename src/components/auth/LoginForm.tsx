@@ -39,13 +39,13 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto w-full">
-      <h1 className="text-2xl font-bold mb-2">Selamat Datang!</h1>
+    <div className="max-w-md mx-auto w-full text-white">
+      <h1 className="text-4xl font-bold mb-2">Selamat Datang!</h1>
       <p className="mb-6 text-sm">
         Tidak punya akun?{" "}
         <Link
           href="/register"
-          className="font-medium text-black hover:underline"
+          className="font-bold text-white hover:underline"
         >
           Daftar
         </Link>
@@ -60,7 +60,7 @@ export default function LoginForm() {
             id="email"
             type="email"
             placeholder="Masukkan email Anda"
-            className="w-full h-10 bg-gray-100"
+            className="w-full h-10 bg-gray-100 text-black"
             {...form.register("email")}
           />
           {form.formState.errors.email && (
@@ -78,7 +78,7 @@ export default function LoginForm() {
             id="password"
             type="password"
             placeholder="Masukkan password anda"
-            className="w-full h-10 bg-gray-100"
+            className="w-full h-10 bg-gray-100 text-black"
             {...form.register("password")}
           />
           {form.formState.errors.password && (
@@ -92,7 +92,7 @@ export default function LoginForm() {
 
         <Button
           type="submit"
-          className="w-full bg-black cursor-pointer text-white h-10 rounded"
+          className="w-full bg-primary-200 hover:bg-primary-300 cursor-pointer text-white h-10 rounded"
           disabled={loading}
         >
           {loading ? "Loading..." : "Masuk"}

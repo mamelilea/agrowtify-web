@@ -51,11 +51,11 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto w-full">
-      <h1 className="text-2xl font-bold mb-2">Buat Akun Baru</h1>
+    <div className="max-w-md mx-auto w-full text-white">
+      <h1 className="text-4xl font-bold mb-2">Selamat Datang!</h1>
       <p className="mb-6 text-sm">
         Sudah punya akun?{" "}
-        <Link href="/login" className="font-medium text-black hover:underline">
+        <Link href="/login" className="font-medium text-white hover:underline">
           Masuk
         </Link>
       </p>
@@ -69,7 +69,7 @@ export default function RegisterForm() {
             id="name"
             type="text"
             placeholder="Masukkan nama lengkap Anda"
-            className="w-full h-10 bg-gray-100"
+            className="w-full h-10 bg-gray-100 text-black"
             {...form.register("name")}
           />
           {form.formState.errors.name && (
@@ -87,7 +87,7 @@ export default function RegisterForm() {
             id="email"
             type="email"
             placeholder="Masukkan email Anda"
-            className="w-full h-10 bg-gray-100"
+            className="w-full h-10 bg-gray-100 text-black"
             {...form.register("email")}
           />
           {form.formState.errors.email && (
@@ -105,7 +105,7 @@ export default function RegisterForm() {
             id="password"
             type="password"
             placeholder="Masukkan password Anda"
-            className="w-full h-10 bg-gray-100"
+            className="w-full h-10 bg-gray-100 text-black"
             {...form.register("password")}
           />
           {form.formState.errors.password && (
@@ -115,7 +115,7 @@ export default function RegisterForm() {
           )}
         </div>
 
-        <div className="space-y-2 text-sm">
+        <div className="space-y-2 text-sm ">
           <label htmlFor="confirmPassword" className="block font-medium">
             Konfirmasi Password
           </label>
@@ -123,7 +123,7 @@ export default function RegisterForm() {
             id="confirmPassword"
             type="password"
             placeholder="Konfirmasi password Anda"
-            className="w-full h-10 bg-gray-100"
+            className="w-full h-10 bg-gray-100 text-black"
             {...form.register("confirmPassword")}
           />
           {form.formState.errors.confirmPassword && (
@@ -137,7 +137,7 @@ export default function RegisterForm() {
 
         <Button
           type="submit"
-          className="w-full bg-black cursor-pointer text-white h-10 rounded"
+          className="w-full bg-primary-200 cursor-pointer text-white h-10 rounded"
           disabled={loading}
         >
           {loading ? "Loading..." : "Daftar"}

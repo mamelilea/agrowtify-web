@@ -1,9 +1,10 @@
-import { NextRequest } from 'next/server';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import prisma from '@/lib/db';
+import { NextRequest } from "next/server";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import prisma from "@/lib/db";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-not-for-production';
+const JWT_SECRET =
+  process.env.JWT_SECRET || "fallback-secret-not-for-production";
 
 export interface UserSession {
   id: string;
@@ -15,16 +16,19 @@ export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
 }
 
-export async function comparePasswords(plainPassword: string, hashedPassword: string): Promise<boolean> {
+export async function comparePasswords(
+  plainPassword: string,
+  hashedPassword: string,
+): Promise<boolean> {
   return bcrypt.compare(plainPassword, hashedPassword);
 }
 
 export async function createSession(userId: string): Promise<string> {
-  const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
-  
+  const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" });
+
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7);
-  
+
   await prisma.session.create({
     data: {
       userId,
@@ -32,21 +36,23 @@ export async function createSession(userId: string): Promise<string> {
       token,
     },
   });
-  
+
   return token;
 }
 
-export async function getUserFromToken(token: string): Promise<UserSession | null> {
+export async function getUserFromToken(
+  token: string,
+): Promise<UserSession | null> {
   try {
     const session = await prisma.session.findFirst({
       where: { token: token },
       include: { user: true },
     });
-    
+
     if (!session || session.expiresAt < new Date()) {
       return null;
     }
-    
+
     return {
       id: session.user.id,
       email: session.user.email,
@@ -57,17 +63,22 @@ export async function getUserFromToken(token: string): Promise<UserSession | nul
   }
 }
 
-export async function getSessionFromRequest(req: NextRequest): Promise<UserSession | null> {
-  const cookieHeader = req.headers.get('cookie') || '';
-  const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
-    const [key, value] = cookie.trim().split('=');
-    acc[key] = value;
-    return acc;
-  }, {} as Record<string, string>);
-  
-  const token = cookies['auth-token'];
+export async function getSessionFromRequest(
+  req: NextRequest,
+): Promise<UserSession | null> {
+  const cookieHeader = req.headers.get("cookie") || "";
+  const cookies = cookieHeader.split(";").reduce(
+    (acc, cookie) => {
+      const [key, value] = cookie.trim().split("=");
+      acc[key] = value;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
+
+  const token = cookies["auth-token"];
   if (!token) return null;
-  
+
   return getUserFromToken(token);
 }
 

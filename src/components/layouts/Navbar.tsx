@@ -6,9 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -33,8 +31,8 @@ export default function Navbar() {
   };
 
   return (
-    <div className="border-b bg-background">
-      <div className="flex h-20 justify-between items-center px-4 max-w-7xl mx-auto">
+    <div className="py-5 fixed top-0 w-full z-50">
+      <div className="flex h-20 justify-between bg-white/30 backdrop-blur-lg border-white/20 items-center w-[90%] mx-auto rounded-3xl py-10 px-10">
         <div>
           <Link href="/" className="font-bold text-xl flex">
             <Image
@@ -46,34 +44,74 @@ export default function Navbar() {
           </Link>
         </div>
         <NavigationMenu>
-          <NavigationMenuList className="gap-10">
+          <NavigationMenuList className="gap-10 text-primary-300 font-bold">
             <NavigationMenuItem>
               <Link href="/" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Beranda
-                </NavigationMenuLink>
+                Beranda
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/agroguide" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1 cursor-pointer">
                   Agroguide
-                </NavigationMenuLink>
-              </Link>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="ml-1"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-gradient-to-br from-white/30 to-white/20">
+                  <DropdownMenuItem asChild>
+                    <Link href="/agroguide/video">Video</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/agroguide/artikel">Artikel</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="/agroevent" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Agroevent
-                </NavigationMenuLink>
+                Agroevent
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/agrocare" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1 cursor-pointer">
                   Agrocare
-                </NavigationMenuLink>
-              </Link>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="ml-1"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-gradient-to-br from-white/30 to-white/20">
+                  <DropdownMenuItem asChild>
+                    <Link href="/agrocare/journaling">Journaling</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/agrocare/weather">Ramalan Cuaca</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
@@ -86,16 +124,32 @@ export default function Navbar() {
                 Hello, {user.name || user.email}
               </span>
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Avatar className="h-8 w-8 cursor-pointer">
-                    <AvatarFallback>
-                      {user.name ? getInitials(user.name) : "U"}
-                    </AvatarFallback>
-                  </Avatar>
+                <DropdownMenuTrigger className="flex items-center gap-2 cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8 cursor-pointer">
+                      <AvatarFallback>
+                        {user.name ? getInitials(user.name) : "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuContent
+                  className="bg-gradient-to-br from-white/30 to-white/20"
+                  align="end"
+                >
                   <DropdownMenuItem onClick={logout} className="text-red-500">
                     Logout
                   </DropdownMenuItem>
@@ -105,7 +159,9 @@ export default function Navbar() {
           ) : (
             <div className="flex items-center">
               <Button size="sm" asChild>
-                <Link href="/login">Masuk</Link>
+                <Link className="" href="/login">
+                  Masuk
+                </Link>
               </Button>
             </div>
           )}

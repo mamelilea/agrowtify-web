@@ -8,23 +8,18 @@ datasource db {
 }
 
 model User {
-  id         String             @id @default(cuid())
-  name       String?
-  email      String             @unique
-  password   String
-  role       UserRole           @default(USER)
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
-  sessions   Session[]
-  events     Event[]
-  journals   Journal[]
-  agroguides AgroguideContent[]
+  id               String             @id @default(cuid())
+  name             String?
+  email            String             @unique
+  password         String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  role             UserRole           @default(USER)
+  agroguides       AgroguideContent[]
+  events           Event[]
+  journals         Journal[]
+  sessions         Session[]
   weatherForecasts WeatherForecast[]
-}
-
-enum UserRole {
-  USER
-  ADMIN
 }
 
 model Session {
@@ -39,7 +34,7 @@ model Session {
 model Event {
   id          String    @id @default(cuid())
   title       String
-  description String    @db.Text
+  description String
   location    String?
   eventType   EventType
   startDate   DateTime
@@ -48,23 +43,117 @@ model Event {
   organizer   String
   contactInfo String?
   website     String?
-  category    Category  @relation(fields: [categoryId], references: [id])
   categoryId  String
   isPublished Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  createdBy   User      @relation(fields: [userId], references: [id])
   userId      String
+  category    Category  @relation(fields: [categoryId], references: [id])
+  createdBy   User      @relation(fields: [userId], references: [id])
 }
 
 model Category {
   id          String             @id @default(cuid())
   name        String             @unique
   description String?
-  events      Event[]
-  agroguides  AgroguideContent[]
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
+  agroguides  AgroguideContent[]
+  events      Event[]
+}
+
+model AgroguideContent {
+  id          String      @id @default(cuid())
+  title       String
+  description String
+  contentType ContentType
+  url         String
+  thumbnail   String?
+  categoryId  String
+  isPublished Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  userId      String
+  content     String?
+  category    Category    @relation(fields: [categoryId], references: [id])
+  createdBy   User        @relation(fields: [userId], references: [id])
+}
+
+model Plant {
+  id               String            @id @default(cuid())
+  name             String            @unique
+  description      String
+  careGuide        String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  journals         Journal[]
+  weatherForecasts WeatherForecast[]
+}
+
+model WeatherForecast {
+  id        String   @id @default(cuid())
+  userId    String
+  plantId   String?
+  location  Json
+  forecast  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  plant     Plant?   @relation(fields: [plantId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Journal {
+  id        String   @id @default(cuid())
+  title     String?
+  date      DateTime @default(now())
+  userId    String
+  plantId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  answers   Answer[]
+  plant     Plant?   @relation(fields: [plantId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  media     Media[]
+}
+
+model JournalQuestion {
+  id          String       @id @default(cuid())
+  question    String
+  description String?
+  orderIndex  Int
+  isRequired  Boolean      @default(false)
+  options     String[]     @default([])
+  type        QuestionType @default(TEXT)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  answers     Answer[]
+}
+
+model Answer {
+  id         String          @id @default(cuid())
+  text       String
+  journalId  String
+  questionId String
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  journal    Journal         @relation(fields: [journalId], references: [id], onDelete: Cascade)
+  question   JournalQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model Media {
+  id        String    @id @default(cuid())
+  url       String
+  fileKey   String    @unique
+  type      MediaType
+  journalId String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  journal   Journal   @relation(fields: [journalId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
 
 enum EventType {
@@ -76,94 +165,6 @@ enum EventType {
 enum ContentType {
   ARTICLE
   VIDEO
-}
-
-model AgroguideContent {
-  id          String      @id @default(cuid())
-  title       String
-  description String      @db.Text
-  contentType ContentType
-  url         String 
-  thumbnail   String? 
-  categoryId  String
-  category    Category    @relation(fields: [categoryId], references: [id])
-  isPublished Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  createdBy   User        @relation(fields: [userId], references: [id])
-  userId      String
-}
-
-model Plant {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  description String   @db.Text
-  careGuide   String   @db.Text
-  journals    Journal[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  weatherForecasts WeatherForecast[] 
-}
-
-model WeatherForecast {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plantId   String?
-  plant     Plant?   @relation(fields: [plantId], references: [id])
-  location  Json     // Stores latitude, longitude, and location name
-  forecast  Json     // Stores the weather forecast data
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Journal {
-  id          String       @id @default(cuid())
-  title       String?
-  date        DateTime     @default(now())
-  answers     Answer[]
-  media       Media[]
-  userId      String
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plantId     String?
-  plant       Plant?       @relation(fields: [plantId], references: [id])
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-}
-
-model JournalQuestion {
-  id          String       @id @default(cuid())
-  question    String
-  description String?
-  orderIndex  Int
-  isRequired  Boolean      @default(false)
-  options     String[]     @default([])
-  type        QuestionType @default(TEXT)
-  answers     Answer[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-}
-
-model Answer {
-  id          String           @id @default(cuid())
-  text        String
-  journalId   String
-  journal     Journal          @relation(fields: [journalId], references: [id], onDelete: Cascade)
-  questionId  String
-  question    JournalQuestion  @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-}
-
-model Media {
-  id          String     @id @default(cuid())
-  url         String
-  fileKey     String     @unique // For cloud storage reference
-  type        MediaType
-  journalId   String
-  journal     Journal    @relation(fields: [journalId], references: [id], onDelete: Cascade)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
 }
 
 enum QuestionType {
@@ -179,4 +180,3 @@ enum MediaType {
   IMAGE
   VIDEO
 }
-

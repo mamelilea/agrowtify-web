@@ -1,3 +1,4 @@
+import Footer from "@/components/layouts/Footer";
 import Navbar from "@/components/layouts/Navbar";
 
 export default function MainLayout({
@@ -8,7 +9,8 @@ export default function MainLayout({
   return (
     <>
       <Navbar />
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</main>
+      <main className="mx-auto">{children}</main>
+      <Footer />
     </>
   );
 }
