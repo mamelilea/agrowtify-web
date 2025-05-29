@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   Calendar,
   Tag,
-  User,
   FileText,
   Image as ImageIcon,
 } from "lucide-react";

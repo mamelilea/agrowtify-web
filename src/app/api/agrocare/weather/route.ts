@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/db";
 import { getSessionFromRequest } from "@/lib/auth-node";
 export const runtime = "nodejs";
 
@@ -503,18 +502,6 @@ export async function GET(request: NextRequest) {
       forecast: weatherData,
       locationName: locationName,
     };
-
-    const forecastRecord = await prisma.weatherForecast.create({
-      data: {
-        userId: session.id,
-        location: {
-          lat: lat,
-          lon: lon,
-          name: locationName || weatherData.timezone || "Unknown Location",
-        },
-        forecast: weatherData,
-      },
-    });
 
     return NextResponse.json(responsePayload);
   } catch (error) {

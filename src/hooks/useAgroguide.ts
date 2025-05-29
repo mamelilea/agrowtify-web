@@ -96,8 +96,8 @@ export const useAgroguide = ({ contentType }: UseAgroguideProps) => {
         const data: AgroguideResponse = await response.json();
         setContent(data.content);
         setPagination(data.pagination);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Terjadi kesalahan');
         setContent([]);
       } finally {
         setLoading(false);

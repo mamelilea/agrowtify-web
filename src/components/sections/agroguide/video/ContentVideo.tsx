@@ -22,14 +22,14 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
   const [error, setError] = useState<string | null>(null);
 
   const debounce = useCallback(
-    <T extends (...args: any[]) => void>(func: T, delay: number) => {
+    <T extends (...args: unknown[]) => void>(func: T, delay: number) => {
       let timeoutId: NodeJS.Timeout;
       return (...args: Parameters<T>) => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => func(...args), delay);
       };
     },
-    [],
+    []
   );
 
   const fetchContent = useCallback(
@@ -53,21 +53,21 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
 
         const data = await res.json();
         setVideos(data.content);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Terjadi kesalahan");
         setVideos([]);
       } finally {
         setLoading(false);
       }
     },
-    [],
+    []
   );
 
   const debouncedFetchContent = useCallback(
     debounce((category: string | null, search: string) => {
       fetchContent(category, search);
     }, 300),
-    [fetchContent, debounce],
+    [fetchContent, debounce]
   );
 
   useEffect(() => {
