@@ -105,7 +105,7 @@ export default function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-gradient-to-br from-white/30 to-white/20">
                   <DropdownMenuItem asChild>
-                    <Link href="/agrocare/journaling">Journaling</Link>
+                    <Link href="/agrocare/journal">Journaling</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/agrocare/weather">Ramalan Cuaca</Link>

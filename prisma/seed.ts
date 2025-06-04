@@ -221,74 +221,102 @@ async function main() {
   for (const entry of agroguideEntries) {
     await prisma.agroguideContent.create({ data: entry });
   }
+  
 
-  console.log("📝 Creating journal questions...");
-  const journalQuestions = [
+  console.log("📚 Creating dummy journal entries...");
+  const dummyJournals = [
     {
-      question: "How are your plants doing today?",
-      description: "Describe the general condition of your plants",
-      orderIndex: 1,
-      isRequired: true,
-      type: QuestionType.TEXTAREA,
+      title: "Tunas Pertama Muncul",
+      date: new Date('2024-04-23T08:00:00Z'),
+      userId: user.id,
+      plantId: null,
+      kondisiTanaman: "Tanaman terlihat sehat dan muncul tunas baru!",
+      aktivitasHariIni: "Penyiraman rutin pagi hari.",
+      perubahanTercatat: "Muncul 2 tunas kecil di batang utama.",
+      catatanTambahan: "Cuaca cerah, tanaman tampak segar",
+      media: [
+         { url: '/images/mock/journal-4.jpg', fileKey: 'mock_journal_4_img', type: 'IMAGE' },
+      ]
     },
     {
-      question: "Did you water your plants today?",
-      description: "Please select yes or no",
-      orderIndex: 2,
-      isRequired: true,
-      options: ["Yes", "No"],
-      type: QuestionType.SELECT,
+      title: "Mulai Tumbuh Daun Baru",
+      date: new Date('2024-04-24T08:00:00Z'),
+      userId: user.id,
+      plantId: null,
+      kondisiTanaman: "Daun-daun kecil baru mulai mekar.",
+      aktivitasHariIni: "Menyiram pagi dan sore.",
+      perubahanTercatat: "Daun baru berwarna hijau cerah.",
+      catatanTambahan: "Pertumbuhan sangat pesat",
+      media: [
+         { url: '/images/mock/journal-3.jpg', fileKey: 'mock_journal_3_img', type: 'IMAGE' },
+      ]
     },
     {
-      question: "How much water did you use? (in liters)",
-      description: "Enter approximate amount",
-      orderIndex: 3,
-      isRequired: false,
-      type: QuestionType.NUMBER,
+      title: "Ada Sedikit Layu",
+      date: new Date('2024-04-25T08:00:00Z'),
+      userId: user.id,
+      plantId: null,
+      kondisiTanaman: "Beberapa daun terlihat agak layu di siang hari.",
+      aktivitasHariIni: "Menyiram pagi hari.",
+      perubahanTercatat: "Beberapa daun terkulai di siang panas.",
+      catatanTambahan: "Perlu perhatian ekstra untuk penyiraman",
+      media: [
+         { url: '/images/mock/journal-2.jpg', fileKey: 'mock_journal_2_img', type: 'IMAGE' },
+      ]
     },
     {
-      question: "Have you noticed any pests or diseases?",
-      description: "Describe any issues you have observed",
-      orderIndex: 4,
-      isRequired: false,
-      type: QuestionType.TEXTAREA,
+      title: "Kembali Segar",
+      date: new Date('2024-04-26T08:00:00Z'),
+      userId: user.id,
+      plantId: null,
+      kondisiTanaman: "Tanaman kembali terlihat segar setelah disiram sore kemarin.",
+      aktivitasHariIni: "Penyiraman pagi hari.",
+      perubahanTercatat: "Daun-daun yang layu kemarin sudah tegak kembali.",
+      catatanTambahan: "Pembelajaran penting tentang jadwal penyiraman",
+      media: [
+         { url: '/images/mock/journal-1.jpg', fileKey: 'mock_journal_1_img', type: 'IMAGE' },
+      ]
     },
     {
-      question: "What activities did you perform today?",
-      description: "Select all that apply",
-      orderIndex: 5,
-      isRequired: false,
-      options: [
-        "Watering",
-        "Fertilizing",
-        "Weeding",
-        "Harvesting",
-        "Planting",
-        "Pruning",
-        "Pest control",
-      ],
-      type: QuestionType.MULTISELECT,
-    },
-    {
-      question: "When did you last fertilize your plants?",
-      description: "Enter the date",
-      orderIndex: 6,
-      isRequired: false,
-      type: QuestionType.DATE,
+      title: "Persiapan Tanam",
+      date: new Date('2024-04-22T08:00:00Z'),
+      userId: user.id,
+      plantId: null,
+      kondisiTanaman: "Tanah sudah siap untuk ditanami.",
+      aktivitasHariIni: "Menggemburkan tanah dan menambah pupuk.",
+      perubahanTercatat: "Struktur tanah lebih gembur.",
+      catatanTambahan: "Persiapan yang matang adalah kunci sukses",
+      media: [
+         { url: '/images/mock/journal-5.jpg', fileKey: 'mock_journal_5_img', type: 'IMAGE' },
+      ]
     },
   ];
 
-  for (const questionData of journalQuestions) {
-    await prisma.journalQuestion.upsert({
-      where: {
-        id: `question_${questionData.orderIndex}`,
-      },
-      update: {},
-      create: questionData,
-    });
-  }
+  for (const journalData of dummyJournals) {
+      const createdJournal = await prisma.journal.create({
+          data: {
+              title: journalData.title,
+              date: journalData.date,
+              userId: journalData.userId,
+              plantId: journalData.plantId || null,
+              kondisiTanaman: journalData.kondisiTanaman,
+              aktivitasHariIni: journalData.aktivitasHariIni,
+              perubahanTercatat: journalData.perubahanTercatat,
+              catatanTambahan: journalData.catatanTambahan,
+          }
+      });
 
-  console.log("✅ Dummy data created successfully!");
+       for (const mediaData of journalData.media) {
+            await prisma.media.create({
+                data: {
+                    url: mediaData.url,
+                    fileKey: mediaData.fileKey,
+                    type: mediaData.type === 'IMAGE' ? 'IMAGE' : 'VIDEO',
+                    journalId: createdJournal.id,
+                }
+            });
+       }
+  }
 }
 
 main()

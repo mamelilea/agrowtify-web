@@ -7,6 +7,7 @@ import { WeatherForecast } from "@/components/sections/agrocare/weather/WeatherF
 import { WeatherCareCard } from "@/components/sections/agrocare/weather/WeatherCareCard";
 import { WeatherError } from "@/components/sections/agrocare/weather/WeatherError";
 import { WeatherLoading } from "@/components/sections/agrocare/weather/WeatherLoading";
+import { WeatherLoginRequired } from "@/components/sections/agrocare/weather/WeatherLoginRequired";
 
 // Definisikan interface untuk data cuaca
 interface WeatherData {
@@ -28,6 +29,7 @@ export default function WeatherPage() {
   const [locationName, setLocationName] = useState<string>(
     "Mendapatkan lokasi..."
   );
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
 
   useEffect(() => {
     const getUserLocationAndFetchData = () => {
@@ -42,11 +44,20 @@ export default function WeatherPage() {
 
               if (!response.ok) {
                 const errorBody = await response.text();
+
+                if (response.status === 401) {
+                  setIsUnauthorized(true);
+                  setLoading(false);
+                  return;
+                }
+
+                // Only log and handle other errors
                 console.error(
                   "Backend Weather API fetch failed:",
                   response.status,
                   errorBody
                 );
+
                 let errorDetail = response.statusText;
                 try {
                   const errorJson = JSON.parse(errorBody);
@@ -71,11 +82,13 @@ export default function WeatherPage() {
               setLoading(false);
             } catch (error) {
               console.error("Error fetching data from backend:", error);
-              setLocationError(
-                error instanceof Error
-                  ? error.message
-                  : "Terjadi kesalahan saat mengambil data. Silakan coba lagi."
-              );
+              if (!isUnauthorized) {
+                setLocationError(
+                  error instanceof Error
+                    ? error.message
+                    : "Terjadi kesalahan saat mengambil data. Silakan coba lagi."
+                );
+              }
               setLoading(false);
             }
           },
@@ -110,6 +123,7 @@ export default function WeatherPage() {
   }, []);
 
   if (loading) return <WeatherLoading />;
+  if (isUnauthorized) return <WeatherLoginRequired />;
   if (locationError)
     return (
       <WeatherError
@@ -128,8 +142,8 @@ export default function WeatherPage() {
   const dailyForecast = weatherData.daily.slice(0, 7);
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="bg-green-700 text-white p-8 rounded-lg mb-8 shadow-xl">
+    <div className="container mx-auto py-30 px-4">
+      <div className="bg-primary-200 text-white p-8 rounded-lg mb-8 shadow-xl">
         <WeatherHeader locationName={locationName} />
         <CurrentWeather
           currentTemp={currentTemp}

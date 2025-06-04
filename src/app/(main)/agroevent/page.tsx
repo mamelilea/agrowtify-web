@@ -2,13 +2,19 @@
 
 import ContentEvent from "@/components/sections/agroevent/ContentEvent";
 import HeroSection from "@/components/sections/agroevent/HeroSection";
-import React from "react";
+import React, { useState } from "react";
 
 export default function Agroevent() {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+
   return (
     <div className="bg-white">
-      <HeroSection />
-      <ContentEvent />
+      <HeroSection onSearch={handleSearch} />
+      <ContentEvent searchTerm={searchTerm} />
     </div>
   );
 }

@@ -18,8 +18,13 @@ interface Event {
   category: Category;
 }
 
-export default function ContentEvent() {
+interface ContentEventProps {
+  searchTerm?: string;
+}
+
+export default function ContentEvent({ searchTerm = "" }: ContentEventProps) {
   const [events, setEvents] = useState<Event[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,10 +33,30 @@ export default function ContentEvent() {
       const res = await fetch("/api/events?limit=10");
       const data = await res.json();
       setEvents(data.events || []);
+      setFilteredEvents(data.events || []);
       setLoading(false);
     };
     fetchEvents();
   }, []);
+
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setFilteredEvents(events);
+      return;
+    }
+
+    const searchTermLower = searchTerm.toLowerCase();
+    const filtered = events.filter((event) => {
+      return (
+        event.title.toLowerCase().includes(searchTermLower) ||
+        event.description.toLowerCase().includes(searchTermLower) ||
+        event.location?.toLowerCase().includes(searchTermLower) ||
+        event.category.name.toLowerCase().includes(searchTermLower) ||
+        event.organizer.toLowerCase().includes(searchTermLower)
+      );
+    });
+    setFilteredEvents(filtered);
+  }, [searchTerm, events]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -61,9 +86,21 @@ export default function ContentEvent() {
       </div>
     );
 
+  if (filteredEvents.length === 0) {
+    return (
+      <div className="w-full flex flex-col items-center space-y-8 py-10">
+        <div className="text-center text-gray-600 text-xl min-h-[50vh]">
+          {searchTerm
+            ? "Tidak ada event yang ditemukan"
+            : "Belum ada event yang tersedia"}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex flex-col items-center space-y-8 py-10">
-      {events.map((event) => (
+      {filteredEvents.map((event) => (
         <div
           key={event.id}
           className="bg-primary-400 rounded-lg shadow-lg flex flex-col md:flex-row w-full max-w-4xl h-[500px] overflow-hidden"

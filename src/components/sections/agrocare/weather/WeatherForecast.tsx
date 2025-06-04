@@ -15,7 +15,7 @@ export function WeatherForecast({ dailyForecast }: WeatherForecastProps) {
       {dailyForecast.map((day) => (
         <div
           key={day.dt}
-          className="flex-shrink-0 w-24 bg-green-800 rounded-lg p-3 text-center"
+          className="flex-shrink-0 w-24 bg-primary-100 rounded-lg p-3 text-center"
         >
           <p className="text-sm opacity-90 mb-2">
             {format(fromUnixTime(day.dt), "dd/MM")}

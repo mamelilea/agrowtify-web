@@ -103,41 +103,21 @@ model WeatherForecast {
 }
 
 model Journal {
-  id        String   @id @default(cuid())
-  title     String?
-  date      DateTime @default(now())
-  userId    String
-  plantId   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  answers   Answer[]
-  plant     Plant?   @relation(fields: [plantId], references: [id])
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  media     Media[]
-}
-
-model JournalQuestion {
-  id          String       @id @default(cuid())
-  question    String
-  description String?
-  orderIndex  Int
-  isRequired  Boolean      @default(false)
-  options     String[]     @default([])
-  type        QuestionType @default(TEXT)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  answers     Answer[]
-}
-
-model Answer {
-  id         String          @id @default(cuid())
-  text       String
-  journalId  String
-  questionId String
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
-  journal    Journal         @relation(fields: [journalId], references: [id], onDelete: Cascade)
-  question   JournalQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  id                String   @id @default(cuid())
+  title             String?
+  date              DateTime @default(now())
+  userId            String
+  plantId           String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  kondisiTanaman    String?
+  aktivitasHariIni  String?
+  perubahanTercatat String?
+  catatanTambahan   String?
+  Answer            Answer[]
+  plant             Plant?   @relation(fields: [plantId], references: [id])
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  media             Media[]
 }
 
 model Media {
@@ -149,6 +129,30 @@ model Media {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   journal   Journal   @relation(fields: [journalId], references: [id], onDelete: Cascade)
+}
+
+model Answer {
+  id              String          @id
+  text            String
+  journalId       String
+  questionId      String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime
+  Journal         Journal         @relation(fields: [journalId], references: [id], onDelete: Cascade)
+  JournalQuestion JournalQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model JournalQuestion {
+  id          String       @id
+  question    String
+  description String?
+  orderIndex  Int
+  isRequired  Boolean      @default(false)
+  options     String[]     @default([])
+  type        QuestionType @default(TEXT)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime
+  Answer      Answer[]
 }
 
 enum UserRole {
@@ -167,6 +171,11 @@ enum ContentType {
   VIDEO
 }
 
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
 enum QuestionType {
   TEXT
   TEXTAREA
@@ -174,9 +183,4 @@ enum QuestionType {
   MULTISELECT
   DATE
   NUMBER
-}
-
-enum MediaType {
-  IMAGE
-  VIDEO
 }
