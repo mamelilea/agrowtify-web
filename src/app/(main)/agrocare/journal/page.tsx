@@ -66,8 +66,8 @@ export default function JournalPage() {
           } else {
             setError("Gagal memuat data user: Nama tidak tersedia.");
           }
-        } catch (err: any) {
-          console.error("Error fetching user data:", err);
+        } catch (error: unknown) {
+          console.error("Error fetching user data:", error);
           if (!isUnauthorized) {
             setError("Gagal memuat data user.");
           }
@@ -85,7 +85,7 @@ export default function JournalPage() {
       const fetchJournals = async () => {
         try {
           const res = await fetch(
-            "/api/agrocare/journal/entries?limit=4&sortBy=date&sortOrder=desc"
+            "/api/agrocare/journal/entries?limit=10&sortBy=date&sortOrder=desc"
           );
 
           if (res.status === 401) {
@@ -96,16 +96,17 @@ export default function JournalPage() {
           if (!res.ok) {
             throw new Error(`Failed to fetch journals: ${res.status}`);
           }
+
           const data: JournalApiResponse = await res.json();
           if (Array.isArray(data?.journals)) {
             setLatestJournals(data.journals);
           } else {
             setError("Format data jurnal tidak valid.");
           }
-        } catch (err: any) {
-          console.error("Error fetching journal data:", err);
+        } catch (error: unknown) {
+          console.error("Error fetching journals:", error);
           if (!isUnauthorized) {
-            setError("Gagal memuat riwayat jurnal.");
+            setError("Gagal memuat daftar journal.");
           }
         } finally {
           setLoadingJournals(false);

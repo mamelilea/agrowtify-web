@@ -10,10 +10,6 @@ import { format, fromUnixTime } from "date-fns";
 import { id } from "date-fns/locale";
 
 // Define interfaces for data
-interface User {
-  name: string;
-}
-
 interface JournalEntry {
   id: string;
   date: number; // Unix timestamp
@@ -83,8 +79,8 @@ export default function JournalDetailPage() {
           } else {
             setError("Journal tidak ditemukan.");
           }
-        } catch (err: any) {
-          console.error("Error fetching journal detail:", err);
+        } catch (error: unknown) {
+          console.error("Error fetching journal detail:", error);
           if (!isUnauthorized) {
             setError("Gagal memuat detail journal.");
           }
@@ -114,12 +110,11 @@ export default function JournalDetailPage() {
 
           const data: JournalsListResponse = await res.json();
           if (Array.isArray(data?.journals)) {
-            // Filter out current journal from the list
             const filtered = data.journals.filter((j) => j.id !== journalId);
             setOtherJournals(filtered);
           }
-        } catch (err: any) {
-          console.error("Error fetching other journals:", err);
+        } catch (error: unknown) {
+          console.error("Error fetching other journals:", error);
         } finally {
           setLoading(false);
         }

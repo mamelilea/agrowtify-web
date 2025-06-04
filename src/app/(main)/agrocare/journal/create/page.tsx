@@ -36,7 +36,8 @@ export default function CreateJournalPage() {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
     setError(null);
 
@@ -82,18 +83,19 @@ export default function CreateJournalPage() {
         body: submitFormData,
       });
 
-      const responseData = await response.json();
+      if (response.status === 401) {
+        setError("Anda tidak memiliki izin untuk melakukan tindakan ini.");
+        return;
+      }
 
       if (!response.ok) {
-        setError(responseData.error || "Gagal menyimpan journal.");
-        console.error("Failed to save journal:", responseData);
-        return;
+        throw new Error(`Gagal menyimpan journal: ${response.status}`);
       }
 
       alert("Journal berhasil disimpan!");
       router.push("/agrocare/journal");
-    } catch (err: any) {
-      console.error("Error submitting journal:", err);
+    } catch (error: unknown) {
+      console.error("Error submitting journal:", error);
       setError("Terjadi kesalahan saat menyimpan journal.");
     } finally {
       setLoading(false);
@@ -129,7 +131,7 @@ export default function CreateJournalPage() {
         </div>
 
         {/* Form Steps */}
-        <div className="relative">
+        <form onSubmit={handleSubmit} className="relative">
           {/* Vertical Line */}
           <div className="absolute left-6 top-12 bottom-12 w-1 bg-primary-300"></div>
 
@@ -269,7 +271,7 @@ export default function CreateJournalPage() {
                   Apakah anda yakin menyimpan journal ini?
                 </h3>
                 <button
-                  onClick={handleSubmit}
+                  type="submit"
                   disabled={loading}
                   className="w-full p-4 bg-primary-200 hover:bg-primary-400 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors duration-200 disabled:cursor-not-allowed cursor-pointer"
                 >
@@ -278,14 +280,14 @@ export default function CreateJournalPage() {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-            {error}
-          </div>
-        )}
+          {/* Error Message */}
+          {error && (
+            <div className="mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+              {error}
+            </div>
+          )}
+        </form>
 
         {/* Bottom Spacing */}
         <div className="h-12"></div>
