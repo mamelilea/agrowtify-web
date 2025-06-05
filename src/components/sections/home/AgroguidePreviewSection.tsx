@@ -1,61 +1,87 @@
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
+import { AgroguideContent } from "@prisma/client";
 
-interface Category {
-  id: string;
-  name: string;
+interface AgroguidePreviewSectionProps {
+  contentType?: "ARTICLE" | "VIDEO";
 }
 
-interface AgroguideContent {
-  id: string;
-  title: string;
-  description: string;
-  contentType: "ARTICLE" | "VIDEO";
-  url: string;
-  thumbnail?: string;
-  categoryId: string;
-  category: Category;
-  isPublished: boolean;
-  createdAt: string;
-  updatedAt: string;
-  userId: string;
-  createdBy: { name?: string | null; id: string };
+interface ErrorStateProps {
+  onRetry: () => void;
 }
 
-export default function AgroguidePreviewSection() {
-  const [articles, setArticles] = useState<AgroguideContent[]>([]);
-  const [videos, setVideos] = useState<AgroguideContent[]>([]);
+const ErrorState = ({ onRetry }: ErrorStateProps) => (
+  <div className="bg-primary-100 min-h-screen py-20">
+    <div className="w-[80%] mx-auto">
+      <div className="bg-primary-200 rounded-xl p-8 text-center max-w-2xl mx-auto">
+        <div className="mb-6">
+          <svg
+            className="w-24 h-24 mx-auto text-white/60"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        </div>
+        <h3 className="text-2xl font-platypi font-bold text-white mb-3">
+          Oops! Terjadi Gangguan Teknis
+        </h3>
+        <p className="text-white/60 mb-6">
+          Maaf, kami sedang mengalami kesulitan untuk memuat konten AgrowGuide.
+          Ini mungkin disebabkan oleh gangguan jaringan atau server kami sedang
+          dalam pemeliharaan.
+        </p>
+        <div className="space-y-4">
+          <Button
+            onClick={onRetry}
+            className="bg-white text-primary-200 hover:bg-white/90 px-6 py-2 rounded-md transition-colors"
+          >
+            Coba Muat Ulang
+          </Button>
+          <p className="text-sm text-white/40">
+            Jika masalah berlanjut, silakan coba beberapa saat lagi
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+export default function AgroguidePreviewSection({
+  contentType = "ARTICLE",
+}: AgroguidePreviewSectionProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [contents, setContents] = useState<AgroguideContent[]>([]);
+
+  const fetchContent = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `/api/agroguide?contentType=${contentType}&limit=3`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch content");
+      }
+      const data = await response.json();
+      setContents(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        setLoading(true);
-
-        const articlesRes = await fetch("/api/agroguide?type=ARTICLE&limit=3");
-        if (!articlesRes.ok) {
-          throw new Error("Failed to fetch articles");
-        }
-        const articlesData = await articlesRes.json();
-        setArticles(articlesData.content);
-
-        const videosRes = await fetch("/api/agroguide?type=VIDEO&limit=3");
-        if (!videosRes.ok) {
-          throw new Error("Failed to fetch videos");
-        }
-        const videosData = await videosRes.json();
-        setVideos(videosData.content);
-      } catch (err) {
-        console.error("Error fetching agroguide content:", err);
-        setError("Failed to load content.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchContent();
-  }, []);
+  }, [contentType]);
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -117,6 +143,12 @@ export default function AgroguidePreviewSection() {
     </div>
   );
 
+  const handleRetry = () => {
+    setError(null);
+    setLoading(true);
+    fetchContent();
+  };
+
   if (loading)
     return (
       <div className="bg-primary-100 h-full min-h-screen py-20">
@@ -156,8 +188,7 @@ export default function AgroguidePreviewSection() {
       </div>
     );
 
-  if (error)
-    return <div className="text-center py-20 text-red-600">{error}</div>;
+  if (error) return <ErrorState onRetry={handleRetry} />;
 
   return (
     <div className="bg-primary-100 h-full min-h-screen py-20">
@@ -173,20 +204,7 @@ export default function AgroguidePreviewSection() {
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.map(renderContentCard)}
-          </div>
-        </div>
-        <div>
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-5xl font-platypi font-extrabold text-white">
-              Video dari AgrowGuide untuk anda
-            </h2>
-            <Button className="bg-primary-200 text-white px-6 py-2 rounded-md hover:bg-primary-500 transition-colors mt-3">
-              <a href="#">Selengkapnya</a>
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {videos.map(renderContentCard)}
+            {contents.map(renderContentCard)}
           </div>
         </div>
       </div>

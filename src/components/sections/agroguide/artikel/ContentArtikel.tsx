@@ -5,57 +5,47 @@ import AgroguideCard from "../AgroguideCard";
 import { AgroguideContent } from "@prisma/client";
 import { Category } from "@/lib/api/categories";
 import { Search, Filter } from "lucide-react";
+import ErrorState from "../ErrorState";
+import LoadingState from "../LoadingState";
 
 interface ContentArtikelProps {
   categories: Category[];
 }
 
-interface AgroguideContentWithCategory extends AgroguideContent {
-  category: Category;
-}
-
 export default function ContentArtikel({ categories }: ContentArtikelProps) {
-  const [articles, setArticles] = useState<AgroguideContentWithCategory[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [articles, setArticles] = useState<AgroguideContent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const debounce = useCallback(
-    <T extends (...args: unknown[]) => void>(func: T, delay: number) => {
-      let timeoutId: NodeJS.Timeout;
-      return (...args: Parameters<T>) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => func(...args), delay);
-      };
-    },
-    []
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const fetchContent = useCallback(
-    async (category: string | null, search: string) => {
+    async (categoryId?: string, search?: string) => {
       try {
         setLoading(true);
         setError(null);
 
-        const params = new URLSearchParams();
-        params.append("type", "ARTICLE");
-        if (category) params.append("category", category);
-        if (search.trim()) params.append("search", search.trim());
-        params.append("page", "1");
-        params.append("limit", "12");
+        const queryParams = new URLSearchParams({
+          contentType: "ARTICLE",
+          ...(categoryId && { categoryId }),
+          ...(search && { search }),
+        });
 
-        const res = await fetch(`/api/agroguide?${params.toString()}`);
-
-        if (!res.ok) {
-          throw new Error(`Error fetching articles: ${res.statusText}`);
+        const response = await fetch(
+          `/api/agroguide?${queryParams.toString()}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch articles");
         }
 
-        const data = await res.json();
-        setArticles(data.content);
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Terjadi kesalahan");
-        setArticles([]);
+        const data = await response.json();
+        setArticles(data);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "An error occurred while fetching articles"
+        );
       } finally {
         setLoading(false);
       }
@@ -63,39 +53,12 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
     []
   );
 
-  const debouncedFetchContent = useCallback(
-    debounce((category: string | null, search: string) => {
-      fetchContent(category, search);
-    }, 300),
-    [fetchContent, debounce]
-  );
-
   useEffect(() => {
     fetchContent(selectedCategory, searchTerm);
-  }, []);
-
-  useEffect(() => {
-    fetchContent(selectedCategory, searchTerm);
-  }, [selectedCategory, fetchContent]);
-
-  useEffect(() => {
-    if (searchTerm !== "") {
-      debouncedFetchContent(selectedCategory, searchTerm);
-    } else {
-      fetchContent(selectedCategory, searchTerm);
-    }
-  }, [searchTerm, selectedCategory, debouncedFetchContent, fetchContent]);
-
-  const handleCategoryClick = (categoryId: string | null) => {
-    setSelectedCategory(selectedCategory === categoryId ? null : categoryId);
-  };
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
+  }, [fetchContent, selectedCategory, searchTerm]);
 
   const clearFilters = () => {
-    setSelectedCategory(null);
+    setSelectedCategory("");
     setSearchTerm("");
   };
 
@@ -121,7 +84,7 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
               placeholder="Pencarian artikel..."
               className="w-full pl-10 pr-4 py-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2  focus:border-transparent text-white shadow-lg bg-primary-400"
               value={searchTerm}
-              onChange={handleSearchChange}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
@@ -132,11 +95,11 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
           <div className="flex flex-wrap gap-3 items-center justify-center md:justify-start">
             <button
               className={`px-6 py-3 text-sm font-medium border rounded-full transition-all duration-200 ${
-                selectedCategory === null
+                selectedCategory === ""
                   ? "bg-primary-400 text-white border-primary-400 shadow-lg"
                   : "border-primary-200 text-gray-700 hover:bg-gray-50 hover:border-primary-400"
               }`}
-              onClick={() => handleCategoryClick(null)}
+              onClick={() => setSelectedCategory("")}
             >
               Semua
             </button>
@@ -149,7 +112,7 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
                     ? "bg-primary-400 text-white border-primary-400 shadow-lg"
                     : "border-primary-200 text-gray-700 hover:bg-gray-50 hover:border-primary-400"
                 }`}
-                onClick={() => handleCategoryClick(category.id)}
+                onClick={() => setSelectedCategory(category.id)}
               >
                 {category.name}
               </button>
@@ -188,20 +151,12 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
         </div>
 
         {loading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-            <span className="ml-3 text-gray-600">Memuat artikel...</span>
-          </div>
+          <LoadingState contentType="ARTICLE" />
         ) : error ? (
-          <div className="text-center py-20">
-            <div className="text-red-500 text-lg mb-4">❌ Error: {error}</div>
-            <button
-              onClick={() => fetchContent(selectedCategory, searchTerm)}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-              Coba Lagi
-            </button>
-          </div>
+          <ErrorState
+            contentType="ARTICLE"
+            onRetry={() => fetchContent(selectedCategory, searchTerm)}
+          />
         ) : articles.length > 0 ? (
           <>
             <div className="mb-6 text-gray-600">

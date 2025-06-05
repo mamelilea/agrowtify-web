@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Calendar, RefreshCw } from "lucide-react";
 
 interface Category {
   id: string;
@@ -22,20 +24,108 @@ interface ContentEventProps {
   searchTerm?: string;
 }
 
+interface EventErrorStateProps {
+  onRetry: () => void;
+}
+
+function EventErrorState({ onRetry }: EventErrorStateProps) {
+  return (
+    <div className="w-full min-h-[60vh] flex items-center justify-center py-20">
+      <div className="max-w-md w-full mx-auto text-center px-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-red-100">
+          <div className="mb-6">
+            <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Calendar className="w-10 h-10 text-red-500" />
+            </div>
+            <h3 className="text-2xl font-platypi font-bold text-gray-800 mb-2">
+              Gangguan pada Event
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Maaf, kami sedang mengalami kesulitan untuk memuat daftar event.
+              Tim kami sedang bekerja untuk memperbaiki masalah ini.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <Button
+              onClick={onRetry}
+              className="w-full bg-primary-400 hover:bg-primary-500 text-white py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
+            >
+              <RefreshCw className="w-5 h-5" />
+              Coba Muat Ulang
+            </Button>
+            <p className="text-sm text-gray-500">
+              Jika masalah berlanjut, silakan coba beberapa saat lagi
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EventLoadingState() {
+  return (
+    <div className="w-full flex flex-col items-center space-y-8 py-10">
+      {[...Array(3)].map((_, index) => (
+        <div
+          key={index}
+          className="bg-primary-400/20 rounded-lg shadow-lg flex flex-col md:flex-row w-full max-w-4xl h-[500px] overflow-hidden animate-pulse"
+        >
+          {/* Image skeleton */}
+          <div className="w-full md:w-2/5 h-full bg-gray-300"></div>
+
+          {/* Content skeleton */}
+          <div className="w-full md:w-3/5 p-8 flex flex-col justify-center space-y-6">
+            <div className="h-12 bg-gray-300 rounded w-3/4"></div>
+            <div className="space-y-3">
+              <div className="h-4 bg-gray-300 rounded w-full"></div>
+              <div className="h-4 bg-gray-300 rounded w-5/6"></div>
+              <div className="h-4 bg-gray-300 rounded w-4/6"></div>
+            </div>
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="flex items-center space-x-3">
+                  <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
+                  <div className="h-4 bg-gray-300 rounded w-48"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function ContentEvent({ searchTerm = "" }: ContentEventProps) {
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
+  const fetchEvents = async () => {
+    try {
       setLoading(true);
+      setError(null);
       const res = await fetch("/api/events?limit=10");
+      if (!res.ok) {
+        throw new Error("Gagal memuat event");
+      }
       const data = await res.json();
       setEvents(data.events || []);
       setFilteredEvents(data.events || []);
+    } catch (err) {
+      console.error("Error fetching events:", err);
+      setError(err instanceof Error ? err.message : "Terjadi kesalahan");
+      setEvents([]);
+      setFilteredEvents([]);
+    } finally {
       setLoading(false);
-    };
+    }
+  };
+
+  useEffect(() => {
     fetchEvents();
   }, []);
 
@@ -58,6 +148,10 @@ export default function ContentEvent({ searchTerm = "" }: ContentEventProps) {
     setFilteredEvents(filtered);
   }, [searchTerm, events]);
 
+  if (loading) return <EventLoadingState />;
+
+  if (error) return <EventErrorState onRetry={fetchEvents} />;
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
@@ -68,6 +162,30 @@ export default function ContentEvent({ searchTerm = "" }: ContentEventProps) {
     };
     return date.toLocaleDateString("id-ID", options);
   };
+
+  if (filteredEvents.length === 0) {
+    return (
+      <div className="w-full min-h-[60vh] flex flex-col items-center justify-center py-20">
+        <div className="max-w-md w-full mx-auto text-center px-4">
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="mb-6">
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Calendar className="w-10 h-10 text-gray-400" />
+              </div>
+              <h3 className="text-2xl font-platypi font-bold text-gray-800 mb-2">
+                {searchTerm ? "Event Tidak Ditemukan" : "Belum Ada Event"}
+              </h3>
+              <p className="text-gray-600">
+                {searchTerm
+                  ? "Coba ubah kata kunci pencarian Anda"
+                  : "Belum ada event yang tersedia saat ini. Silakan cek kembali nanti."}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const formatTime = (startDateString: string, endDateString: string) => {
     const start = new Date(startDateString);

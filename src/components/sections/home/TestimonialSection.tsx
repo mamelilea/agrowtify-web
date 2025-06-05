@@ -18,7 +18,7 @@ const sampleTestimonials: Testimonial[] = [
       "Saya sangat terbantu oleh website ini. Informasi nya banyak desainnya juga simple jadi mudah dipahami bagi saya yang tidak terlalu paham teknologi.",
     name: "Karjo",
     occupation: "Petani",
-    imageUrl: "/assets/images/karjo.png",
+    imageUrl: "https://ik.imagekit.io/e7kqyoong/Intersect.png?updatedAt=1749106317540",
   },
   {
     id: "2",
@@ -27,7 +27,7 @@ const sampleTestimonials: Testimonial[] = [
       "Tampilan website menarik dan mudah digunakan, saya suka fitur-fitur yang ada membantu tugas perkuliahan saya.",
     name: "Reza",
     occupation: "Mahasiswa Pertanian",
-    imageUrl: "/assets/images/reza.png",
+    imageUrl: "https://ik.imagekit.io/e7kqyoong/Intersect.png?updatedAt=1749106317540",
   },
   {
     id: "3",
@@ -36,7 +36,7 @@ const sampleTestimonials: Testimonial[] = [
       "Informasi yang diberikan cukup lengkap, fitur cuaca harian cukup akurat dan bagus untuk yang ingin belajar dan memulai di bidang pertanian seperti saya",
     name: "Jono",
     occupation: "Karyawan",
-    imageUrl: "/assets/images/jono.png",
+    imageUrl: "https://ik.imagekit.io/e7kqyoong/Intersect.png?updatedAt=1749106317540",
   },
   {
     id: "4",
@@ -45,7 +45,7 @@ const sampleTestimonials: Testimonial[] = [
       "Saya menemukan banyak artikel berguna tentang pertanian dan fitur journaling nya sangat bermanfaat untuk petani!",
     name: "Suptrapto",
     occupation: "Petani",
-    imageUrl: "/assets/images/suptrapto.png",
+    imageUrl: "https://ik.imagekit.io/e7kqyoong/Intersect.png?updatedAt=1749106317540",
   },
 ];
 
@@ -89,7 +89,7 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
     <div className="flex items-center mb-4">
       {renderStars(testimonial.rating)}
     </div>
-    <p className="text-white/80 text-base mb-6 flex-grow line-clamp-5"> </p>
+    <p className="text-white/80 text-base mb-6 flex-grow line-clamp-5">{testimonial.quote}</p>
     <div className="flex items-center mt-auto">
       {" "}
       <Image
