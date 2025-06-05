@@ -63,8 +63,16 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
   };
 
   return (
-    <div className="min-h-screen bg-primary-100 py-20">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen w-full bg-white">
+      <div className="bg-gradient-to-b from-primary-200 to-white text-white py-16 pt-40 px-6">
+        <div className="max-w-6xl mx-auto text-center font-platypi text-primary-400">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4">Agroguide</h1>
+          <h2 className="text-2xl md:text-3xl font-light opacity-90">
+            Video Edukasi
+          </h2>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Search and Filter Section */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
