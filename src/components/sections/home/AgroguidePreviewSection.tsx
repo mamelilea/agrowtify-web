@@ -247,16 +247,16 @@ export default function AgroguidePreviewSection() {
       <div className="w-[80%] mx-auto space-y-12">
         {/* Articles Section */}
         {articles.length > 0 && (
-          <div>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-5xl font-platypi font-extrabold text-white">
-                Artikel dari AgrowGuide untuk anda
-              </h2>
-              <Button className="bg-primary-200 text-white px-6 py-2 rounded-md hover:bg-primary-500 transition-colors mt-3">
-                <a href="#">Selengkapnya</a>
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-5xl font-platypi font-extrabold text-white">
+              Artikel dari AgrowGuide untuk anda
+            </h2>
+            <Button className="bg-primary-200 text-white px-6 py-2 rounded-md hover:bg-primary-500 transition-colors mt-3">
+              <a href="#">Selengkapnya</a>
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {articles.map(renderContentCard)}
             </div>
           </div>
@@ -275,8 +275,8 @@ export default function AgroguidePreviewSection() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {videos.map(renderContentCard)}
-            </div>
           </div>
+        </div>
         )}
 
         {/* Show error state only if both sections failed */}
