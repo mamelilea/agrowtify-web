@@ -55,7 +55,7 @@ export default function Footer() {
               <a href="#">Agrowguide</a>
             </li>
             <li>
-              <a href="#">Agrowvent</a>
+              <a href="#">Agrowevent</a>
             </li>
             <li>
               <a href="#">Agrowcare</a>

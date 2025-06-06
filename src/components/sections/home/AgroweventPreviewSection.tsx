@@ -27,7 +27,7 @@ interface Event {
   createdBy: { name?: string | null; id: string };
 }
 
-export default function AgrowventPreviewSection() {
+export default function AgroweventPreviewSection() {
   const [events, setEvents] = useState<Event[]>([]);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -127,7 +127,7 @@ export default function AgrowventPreviewSection() {
         <div className="w-[80%] mx-auto space-y-20">
           <div className="flex justify-between items-center">
             <h2 className="text-5xl font-platypi font-extrabold text-primary-500">
-              Ikuti event menarik di AgrowVent!
+              Ikuti event menarik di Agrowevent!
             </h2>
           </div>
           <div className="flex justify-center">
@@ -188,7 +188,7 @@ export default function AgrowventPreviewSection() {
       <div className="w-[80%] mx-auto space-y-20">
         <div className="flex justify-between items-center">
           <h2 className="text-5xl font-platypi font-extrabold text-primary-500">
-            Ikuti event menarik di AgrowVent!
+            Ikuti event menarik di Agrowevent!
           </h2>
 
           <Button className="bg-primary-200 text-white px-6 py-2 rounded-md hover:bg-primary-500 transition-colors mt-3">

@@ -8,7 +8,7 @@ export default function ListFeatureSection() {
           Dapatkan dukungan perawatan tanaman dan lahan anda melalui fitur kami
         </h1>
         <h6 className="font-medium text-center">
-          Agrowtify menghadirkan fitur Agrowguide, Agrowvent, dan Agrowcare
+          Agrowtify menghadirkan fitur Agrowguide, Agrowevent, dan Agrowcare
         </h6>
         <div className="grid grid-cols-2 gap-5 max-w-4xl">
           <img src="/assets/images/home/card-journaling.png" alt="card" />

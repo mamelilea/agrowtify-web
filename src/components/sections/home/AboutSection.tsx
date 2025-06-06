@@ -42,7 +42,7 @@ export default function AboutSection() {
                   <img src="/assets/icons/home/daun-home.png" alt="" />
                 </span>
                 <p>
-                  Agrowvent memberikan informasi event seputar perawatan tanaman
+                  Agrowevent memberikan informasi event seputar perawatan tanaman
                   dan lahan.
                 </p>
               </li>

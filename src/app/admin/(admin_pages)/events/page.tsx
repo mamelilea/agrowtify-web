@@ -1,7 +1,7 @@
 // src/app/admin/(admin_pages)/event/page.tsx
 import { Calendar, Clock, MapPin, Plus } from 'lucide-react';
 
-export default function EditAgrowventPage() {
+export default function EditAgroweventPage() {
   const events = Array(2).fill({
     title: "Lorem ipsum non",
     description: "Lorem ipsum felis placerat massa nunc elementum eget blandit diam nibh adipiscing eu ut pharetra id at risus amet magna amet interdum sollicitudin commodo consectetur maecenas at elit a mattis.",
@@ -16,7 +16,7 @@ export default function EditAgrowventPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <h1 className="text-4xl font-bold text-green-100 mb-8" style={{ fontFamily: 'serif' }}>
-          Edit Agrowvent
+          Edit Agrowevent
         </h1>
 
         {/* Events List */}
