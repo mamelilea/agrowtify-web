@@ -83,13 +83,13 @@ export default function AgrowventPreviewSection() {
 
   const handleNext = () => {
     setCurrentEventIndex((prevIndex) =>
-      prevIndex === events.length - 1 ? 0 : prevIndex + 1,
+      prevIndex === events.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const handlePrevious = () => {
     setCurrentEventIndex((prevIndex) =>
-      prevIndex === 0 ? events.length - 1 : prevIndex - 1,
+      prevIndex === 0 ? events.length - 1 : prevIndex - 1
     );
   };
 
@@ -121,8 +121,55 @@ export default function AgrowventPreviewSection() {
     </div>
   );
 
-  if (error)
-    return <div className="text-center py-20 text-red-600">{error}</div>;
+  if (error) {
+    return (
+      <div className="bg-white w-full h-full min-h-screen py-20">
+        <div className="w-[80%] mx-auto space-y-20">
+          <div className="flex justify-between items-center">
+            <h2 className="text-5xl font-platypi font-extrabold text-primary-500">
+              Ikuti event menarik di AgrowVent!
+            </h2>
+          </div>
+          <div className="flex justify-center">
+            <div className="bg-primary-400 rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row w-full max-w-4xl h-[450px] md:h-[400px]">
+              <div className="w-full md:w-1/2 bg-gray-700 flex items-center justify-center">
+                <svg
+                  className="w-32 h-32 text-white/60"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+              <div className="w-full md:w-1/2 p-8 flex flex-col justify-center text-white">
+                <h3 className="text-4xl font-semibold mb-4">
+                  Oops! Terjadi Gangguan Teknis
+                </h3>
+                <p className="text-white/80 mb-6">
+                  Maaf, kami sedang mengalami kesulitan untuk memuat daftar
+                  event. Ini mungkin disebabkan oleh gangguan jaringan atau
+                  server kami sedang dalam pemeliharaan.
+                </p>
+                <Button
+                  onClick={() => window.location.reload()}
+                  className="bg-white text-primary-400 hover:bg-white/90 px-6 py-2 rounded-md transition-colors w-fit"
+                >
+                  Coba Muat Ulang
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (loading)
     return (
       <div className="w-[80%] mx-auto py-20">
@@ -231,7 +278,7 @@ export default function AgrowventPreviewSection() {
                   <span className="text-white/90 line-clamp-1">
                     {formatTime(
                       events[currentEventIndex].startDate,
-                      events[currentEventIndex].endDate,
+                      events[currentEventIndex].endDate
                     )}
                   </span>
                 </div>
