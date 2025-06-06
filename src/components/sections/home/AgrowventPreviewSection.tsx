@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button";
 
 export default function AgrowventPreviewSection() {
   const [events, setEvents] = useState<Event[]>([]);
-  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  // Removed unused state variables:
+  // const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  // These might be needed later for event carousel/slider functionality
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
