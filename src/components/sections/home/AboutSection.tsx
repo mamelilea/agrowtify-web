@@ -1,6 +1,7 @@
 export default function AboutSection() {
   return (
     <div
+      id="about"
       className="w-full"
       style={{
         backgroundImage: `url('/assets/images/home/bg-AboutHome.png')`,
@@ -42,8 +43,8 @@ export default function AboutSection() {
                   <img src="/assets/icons/home/daun-home.png" alt="" />
                 </span>
                 <p>
-                  Agrowevent memberikan informasi event seputar perawatan tanaman
-                  dan lahan.
+                  Agrowevent memberikan informasi event seputar perawatan
+                  tanaman dan lahan.
                 </p>
               </li>
               <li className="flex items-start gap-3">

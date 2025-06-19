@@ -15,12 +15,14 @@ export default function HeroSection() {
               Jadikan setiap langkah anda di lahan lebih terarah, terukur, dan
               berdaya guna!
             </h2>
-            <Button
-              variant="outline"
-              className="font-comme text-lg mt-10 font-bold"
-            >
-              Pelajari lebih lanjut
-            </Button>
+            <a href="#about">
+              <Button
+                variant="outline"
+                className="font-comme text-lg mt-10 font-bold"
+              >
+                Pelajari lebih lanjut
+              </Button>
+            </a>
           </div>
         </div>
         <div className=" w-1/2 h-full flex items-end justify-end ">

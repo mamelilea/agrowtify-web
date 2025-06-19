@@ -26,8 +26,8 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
         setError(null);
 
         const queryParams = new URLSearchParams({
-          contentType: "VIDEO",
-          ...(categoryId && { categoryId }),
+          type: "VIDEO",
+          ...(categoryId && { category: categoryId }),
           ...(search && { search }),
         });
 
@@ -39,7 +39,7 @@ export default function ContentVideo({ categories }: ContentVideoProps) {
         }
 
         const data = await response.json();
-        setVideos(data);
+        setVideos(data.content || []);
       } catch (err) {
         setError(
           err instanceof Error

@@ -5,6 +5,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme inline {
   --font-platypi: "Platypi", serif;
   --font-comme: "Comme", sans-serif;

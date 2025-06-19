@@ -191,8 +191,11 @@ export default function AgroweventPreviewSection() {
             Ikuti event menarik di Agrowevent!
           </h2>
 
-          <Button className="bg-primary-200 text-white px-6 py-2 rounded-md hover:bg-primary-500 transition-colors mt-3">
-            <a href="#">Selengkapnya</a>
+          <Button
+            className="bg-primary-200 text-white px-6 py-2 rounded-md hover:bg-primary-500 transition-colors mt-3"
+            asChild
+          >
+            <a href="/agroevent">Selengkapnya</a>
           </Button>
         </div>
 

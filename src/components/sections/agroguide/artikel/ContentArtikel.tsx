@@ -26,8 +26,8 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
         setError(null);
 
         const queryParams = new URLSearchParams({
-          contentType: "ARTICLE",
-          ...(categoryId && { categoryId }),
+          type: "ARTICLE",
+          ...(categoryId && { category: categoryId }),
           ...(search && { search }),
         });
 
@@ -39,7 +39,8 @@ export default function ContentArtikel({ categories }: ContentArtikelProps) {
         }
 
         const data = await response.json();
-        setArticles(data);
+        console.log("DATA ARTIKEL:", data);
+        setArticles(data.content || []);
       } catch (err) {
         setError(
           err instanceof Error
